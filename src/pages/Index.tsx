@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import OnboardingScreen from "@/screens/OnboardingScreen";
+import MoonChatOnboarding from "@/screens/MoonChatOnboarding";
 import DashboardScreen from "@/screens/DashboardScreen";
 import JourneyScreen from "@/screens/JourneyScreen";
 import ProfileScreen from "@/screens/ProfileScreen";
@@ -47,7 +47,7 @@ const Index = () => {
 
   // Show onboarding if no user data
   if (!userData) {
-    return <OnboardingScreen onComplete={handleOnboardingComplete} />;
+    return <MoonChatOnboarding onComplete={handleOnboardingComplete} />;
   }
 
   // After onboarding, redirect to dashboard
