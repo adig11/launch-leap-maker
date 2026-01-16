@@ -220,13 +220,22 @@ const MoonChatOnboarding = ({ onComplete }: MoonChatOnboardingProps) => {
   };
 
   const handleEnterPath = () => {
+    // Extract clean business name from selection
+    const directionMap: Record<string, { type: string; name: string }> = {
+      "🍳 Cloud Kitchen — Delivery-only food business": { type: "cloud-kitchen", name: "Cloud Kitchen" },
+      "🏠 Local Asset Monetization — Leverage what you have": { type: "asset-monetization", name: "Local Asset Monetization" },
+      "💼 Skill-led Solo Business — Productize your expertise": { type: "skill-business", name: "Skill-led Solo Business" },
+    };
+    
+    const selected = directionMap[userData.direction] || { type: "cloud-kitchen", name: "Cloud Kitchen" };
+    
     onComplete({
       name: userData.background.split(" ")[0] || "Founder",
-      businessType: "cloud-kitchen",
+      businessType: selected.type,
       cuisine: "Multi-Cuisine",
       location: "India",
       investment: "₹2-5 Lakhs",
-      kitchenName: "Your Cloud Kitchen",
+      kitchenName: selected.name,
     });
   };
 
