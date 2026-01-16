@@ -34,17 +34,9 @@ type Stage =
   | "generating"
   | "complete";
 
-const STAGE_PROGRESS: Record<Stage, number> = {
-  opening: 10,
-  background: 20,
-  idea: 35,
-  assets: 50,
-  goal: 60,
-  risk: 75,
-  direction: 90,
-  generating: 95,
-  complete: 100,
-};
+// Random progress increment helper
+const getRandomIncrement = (min: number, max: number) => 
+  Math.floor(Math.random() * (max - min + 1)) + min;
 
 const MoonChatOnboarding = ({ onComplete }: MoonChatOnboardingProps) => {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -132,7 +124,7 @@ const MoonChatOnboarding = ({ onComplete }: MoonChatOnboardingProps) => {
     switch (stage) {
       case "background":
         setUserData(prev => ({ ...prev, background: input }));
-        setClaritySignal(20);
+        setClaritySignal(prev => Math.min(prev + getRandomIncrement(8, 15), 25));
         setTimeout(() => {
           addMoonMessage("Got it. Do you already have an idea, or are you exploring?", [
             "I have a specific idea",
@@ -145,7 +137,7 @@ const MoonChatOnboarding = ({ onComplete }: MoonChatOnboardingProps) => {
 
       case "idea":
         setUserData(prev => ({ ...prev, hasIdea: input }));
-        setClaritySignal(35);
+        setClaritySignal(prev => Math.min(prev + getRandomIncrement(10, 18), 45));
         setTimeout(() => {
           addMoonMessage("Do you have any assets that might matter?\n\n(skills, time, money, location, network)");
           setStage("assets");
@@ -154,7 +146,7 @@ const MoonChatOnboarding = ({ onComplete }: MoonChatOnboardingProps) => {
 
       case "assets":
         setUserData(prev => ({ ...prev, assets: input }));
-        setClaritySignal(50);
+        setClaritySignal(prev => Math.min(prev + getRandomIncrement(12, 20), 65));
         setTimeout(() => {
           addMoonMessage("What does success look like right now?", [
             "Learning the ropes first",
@@ -167,7 +159,7 @@ const MoonChatOnboarding = ({ onComplete }: MoonChatOnboardingProps) => {
 
       case "goal":
         setUserData(prev => ({ ...prev, goal: input }));
-        setClaritySignal(65);
+        setClaritySignal(prev => Math.min(prev + getRandomIncrement(10, 15), 78));
         setTimeout(() => {
           addMoonMessage("How much uncertainty are you comfortable with?", [
             "I prefer proven models",
@@ -180,7 +172,7 @@ const MoonChatOnboarding = ({ onComplete }: MoonChatOnboardingProps) => {
 
       case "risk":
         setUserData(prev => ({ ...prev, risk: input }));
-        setClaritySignal(80);
+        setClaritySignal(prev => Math.min(prev + getRandomIncrement(8, 12), 88));
         setTimeout(() => {
           addMoonMessage("I'm starting to see a few strong directions that fit you.\n\nBased on what you've shared, here are paths that make sense:");
           setTimeout(() => {
@@ -196,14 +188,14 @@ const MoonChatOnboarding = ({ onComplete }: MoonChatOnboardingProps) => {
 
       case "direction":
         setUserData(prev => ({ ...prev, direction: input }));
-        setClaritySignal(95);
+        // Set to 100% right before generating the path
+        setClaritySignal(100);
         setTimeout(() => {
           setStage("generating");
           addMoonMessage("Mapping a personalized business path…");
           
           // Simulate generation delay
           setTimeout(() => {
-            setClaritySignal(100);
             setStage("complete");
             setMessages(prev => [
               ...prev,
@@ -240,45 +232,63 @@ const MoonChatOnboarding = ({ onComplete }: MoonChatOnboardingProps) => {
   };
 
   const progress = claritySignal;
-  const circumference = 2 * Math.PI * 40;
-  const strokeDashoffset = circumference - (progress / 100) * circumference;
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
-      {/* Header with Clarity Signal */}
-      <div className="flex-shrink-0 px-6 pt-6 pb-4 flex justify-center">
-        <div className="relative">
-          <svg className="w-20 h-20 -rotate-90">
-            {/* Background circle */}
-            <circle
-              cx="40"
-              cy="40"
-              r="36"
-              fill="none"
-              stroke="hsl(var(--muted))"
-              strokeWidth="6"
-            />
-            {/* Progress circle */}
-            <motion.circle
-              cx="40"
-              cy="40"
-              r="36"
-              fill="none"
-              stroke="hsl(var(--primary))"
-              strokeWidth="6"
-              strokeLinecap="round"
-              strokeDasharray={2 * Math.PI * 36}
-              initial={{ strokeDashoffset: 2 * Math.PI * 36 }}
-              animate={{ strokeDashoffset: 2 * Math.PI * 36 - (progress / 100) * 2 * Math.PI * 36 }}
-              transition={{ duration: 0.5, ease: "easeOut" }}
-            />
-          </svg>
-          <div className="absolute inset-0 flex flex-col items-center justify-center">
-            <span className="text-xs text-muted-foreground font-medium">Clarity</span>
-            <span className="text-lg font-bold text-secondary">{progress}%</span>
+      {/* Fixed Top Navbar */}
+      <div className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border">
+        <div className="flex items-center justify-between px-4 py-3 max-w-lg mx-auto">
+          {/* Moon Logo & Name */}
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-primary/70 flex items-center justify-center shadow-md">
+              <svg viewBox="0 0 24 24" fill="none" className="w-5 h-5 text-primary-foreground">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="currentColor" />
+              </svg>
+            </div>
+            <div>
+              <h1 className="font-bold text-secondary text-base leading-tight">Moon</h1>
+              <p className="text-xs text-muted-foreground">Your AI Guide</p>
+            </div>
+          </div>
+
+          {/* Clarity Signal - Compact */}
+          <div className="flex items-center gap-2">
+            <div className="relative">
+              <svg className="w-11 h-11 -rotate-90">
+                {/* Background circle */}
+                <circle
+                  cx="22"
+                  cy="22"
+                  r="18"
+                  fill="none"
+                  stroke="hsl(var(--muted))"
+                  strokeWidth="3"
+                />
+                {/* Progress circle */}
+                <motion.circle
+                  cx="22"
+                  cy="22"
+                  r="18"
+                  fill="none"
+                  stroke="hsl(var(--primary))"
+                  strokeWidth="3"
+                  strokeLinecap="round"
+                  strokeDasharray={2 * Math.PI * 18}
+                  initial={{ strokeDashoffset: 2 * Math.PI * 18 }}
+                  animate={{ strokeDashoffset: 2 * Math.PI * 18 - (progress / 100) * 2 * Math.PI * 18 }}
+                  transition={{ duration: 0.5, ease: "easeOut" }}
+                />
+              </svg>
+              <div className="absolute inset-0 flex items-center justify-center">
+                <span className="text-xs font-bold text-secondary">{progress}%</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
+
+      {/* Spacer for fixed navbar */}
+      <div className="h-[72px]" />
 
       {/* Chat Messages */}
       <div className="flex-1 overflow-y-auto px-4 pb-4">
