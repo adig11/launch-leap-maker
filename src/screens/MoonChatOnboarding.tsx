@@ -303,30 +303,73 @@ const MoonChatOnboarding = ({ onComplete }: MoonChatOnboardingProps) => {
               >
                 {message.content === "PATH_READY" ? (
                   <motion.div
-                    className="w-full max-w-sm bg-gradient-to-br from-primary/10 via-accent/5 to-primary/10 border-2 border-primary rounded-2xl p-6"
-                    initial={{ scale: 0.9 }}
-                    animate={{ scale: 1 }}
-                    transition={{ type: "spring", stiffness: 200 }}
+                    className="w-full max-w-sm overflow-hidden rounded-3xl border border-border/50 bg-gradient-to-br from-card via-card to-accent/5 shadow-xl"
+                    initial={{ scale: 0.9, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    transition={{ type: "spring", stiffness: 200, damping: 20 }}
                   >
-                    <div className="flex items-center gap-3 mb-4">
-                      <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center">
-                        <svg viewBox="0 0 24 24" fill="none" className="w-6 h-6 text-primary">
-                          <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" fill="currentColor" />
-                        </svg>
+                    {/* Dynamic header with business emoji */}
+                    <div className="relative bg-gradient-to-r from-primary/10 via-primary/5 to-transparent p-6 pb-4">
+                      <motion.div 
+                        className="absolute top-4 right-4 text-4xl"
+                        initial={{ scale: 0, rotate: -20 }}
+                        animate={{ scale: 1, rotate: 0 }}
+                        transition={{ delay: 0.2, type: "spring" }}
+                      >
+                        {selectedBusiness?.emoji}
+                      </motion.div>
+                      <div className="flex items-center gap-2 mb-2">
+                        <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                        <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Path Ready</span>
                       </div>
-                      <div>
-                        <h3 className="font-bold text-secondary text-lg">
-                          Your {selectedBusiness?.name} Path is Ready
-                        </h3>
-                        <p className="text-sm text-muted-foreground">Built for your goals & constraints</p>
+                      <h3 className="font-bold text-secondary text-xl leading-tight pr-12">
+                        {selectedBusiness?.name}
+                      </h3>
+                      <p className="text-sm text-muted-foreground mt-1">
+                        {selectedBusiness?.description}
+                      </p>
+                    </div>
+                    
+                    {/* Features preview */}
+                    <div className="px-6 py-4 space-y-3">
+                      <div className="flex items-center gap-3 text-sm">
+                        <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+                          <svg viewBox="0 0 24 24" fill="none" className="w-4 h-4 text-primary">
+                            <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                          </svg>
+                        </div>
+                        <span className="text-muted-foreground">Step-by-step guidance tailored to you</span>
+                      </div>
+                      <div className="flex items-center gap-3 text-sm">
+                        <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+                          <svg viewBox="0 0 24 24" fill="none" className="w-4 h-4 text-primary">
+                            <path d="M13 10V3L4 14h7v7l9-11h-7z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                          </svg>
+                        </div>
+                        <span className="text-muted-foreground">Actionable tasks, no fluff</span>
+                      </div>
+                      <div className="flex items-center gap-3 text-sm">
+                        <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+                          <svg viewBox="0 0 24 24" fill="none" className="w-4 h-4 text-primary">
+                            <path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                          </svg>
+                        </div>
+                        <span className="text-muted-foreground">Built for Indian market realities</span>
                       </div>
                     </div>
-                    <Button 
-                      onClick={handleEnterPath}
-                      className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold py-6"
-                    >
-                      Enter Path →
-                    </Button>
+                    
+                    {/* CTA */}
+                    <div className="p-6 pt-2">
+                      <Button 
+                        onClick={handleEnterPath}
+                        className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold py-6 rounded-xl shadow-lg shadow-primary/20 transition-all hover:shadow-xl hover:shadow-primary/30"
+                      >
+                        <span>Start Your {selectedBusiness?.name} Journey</span>
+                        <svg viewBox="0 0 24 24" fill="none" className="w-5 h-5 ml-2">
+                          <path d="M13 7l5 5m0 0l-5 5m5-5H6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                        </svg>
+                      </Button>
+                    </div>
                   </motion.div>
                 ) : (
                   <div
