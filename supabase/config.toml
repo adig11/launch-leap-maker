@@ -1,0 +1,4 @@
+project_id = "gtmlhitvdpvkqhhakxfd"
+
+[functions.moon-chat]
+verify_jwt = false
