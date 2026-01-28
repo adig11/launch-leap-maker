@@ -2,6 +2,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 interface MoonChatOnboardingProps {
   onComplete: (userData: {
@@ -19,20 +21,17 @@ interface Message {
   role: "moon" | "user";
   content: string;
   options?: string[];
-  isTyping?: boolean;
+  suggestions?: Array<{
+    emoji: string;
+    name: string;
+    description: string;
+  }>;
 }
 
-// Conversation flow stages
-type Stage = 
-  | "opening"
-  | "background" 
-  | "idea"
-  | "assets"
-  | "goal"
-  | "risk"
-  | "direction"
-  | "generating"
-  | "complete";
+interface ChatMessage {
+  role: "user" | "assistant";
+  content: string;
+}
 
 // Random progress increment helper
 const getRandomIncrement = (min: number, max: number) => 
@@ -40,18 +39,17 @@ const getRandomIncrement = (min: number, max: number) =>
 
 const MoonChatOnboarding = ({ onComplete }: MoonChatOnboardingProps) => {
   const [messages, setMessages] = useState<Message[]>([]);
+  const [chatHistory, setChatHistory] = useState<ChatMessage[]>([]);
   const [inputValue, setInputValue] = useState("");
-  const [stage, setStage] = useState<Stage>("opening");
   const [claritySignal, setClaritySignal] = useState(10);
   const [isTyping, setIsTyping] = useState(false);
-  const [userData, setUserData] = useState({
-    background: "",
-    hasIdea: "",
-    assets: "",
-    goal: "",
-    risk: "",
-    direction: "",
-  });
+  const [questionCount, setQuestionCount] = useState(0);
+  const [isComplete, setIsComplete] = useState(false);
+  const [selectedBusiness, setSelectedBusiness] = useState<{
+    emoji: string;
+    name: string;
+    description: string;
+  } | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -68,30 +66,77 @@ const MoonChatOnboarding = ({ onComplete }: MoonChatOnboardingProps) => {
       addMoonMessage(
         "Hey, I'm Moon.\n\nI'll help you get clear on what to build and how to think about it.\n\nI'll ask a few questions — you don't need perfect answers."
       );
+      // Start the conversation by calling the LLM
       setTimeout(() => {
-        addMoonMessage("What's your current background or work experience?");
-        setStage("background");
+        startConversation();
       }, 1500);
     }, 500);
     return () => clearTimeout(timer);
   }, []);
 
-  const addMoonMessage = (content: string, options?: string[]) => {
+  const startConversation = async () => {
     setIsTyping(true);
-    
-    // Simulate typing delay
-    setTimeout(() => {
+    try {
+      const { data, error } = await supabase.functions.invoke("moon-chat", {
+        body: { messages: [] },
+      });
+
+      if (error) throw error;
+
+      const content = data?.content;
+      if (content) {
+        handleLLMResponse(content);
+      }
+    } catch (error) {
+      console.error("Error starting conversation:", error);
+      toast.error("Failed to start conversation. Please refresh.");
+      // Fallback to first question
+      addMoonMessage("What's your current background or work experience?");
+    } finally {
       setIsTyping(false);
-      setMessages(prev => [
-        ...prev,
-        {
-          id: Date.now().toString(),
-          role: "moon",
-          content,
-          options,
-        }
-      ]);
-    }, 800 + Math.random() * 400);
+    }
+  };
+
+  const handleLLMResponse = (content: string) => {
+    try {
+      // Try to parse as JSON
+      const parsed = JSON.parse(content);
+      
+      if (parsed.isComplete && parsed.suggestions) {
+        // Final suggestions
+        setClaritySignal(100);
+        setIsComplete(true);
+        addMoonMessage(parsed.message, undefined, parsed.suggestions);
+      } else if (parsed.options) {
+        // MCQ question
+        setQuestionCount(parsed.questionNumber || questionCount + 1);
+        addMoonMessage(parsed.message, parsed.options);
+      } else {
+        // Free text question
+        setQuestionCount(parsed.questionNumber || questionCount + 1);
+        addMoonMessage(parsed.message);
+      }
+    } catch {
+      // Plain text response
+      addMoonMessage(content);
+    }
+  };
+
+  const addMoonMessage = (
+    content: string, 
+    options?: string[], 
+    suggestions?: Array<{ emoji: string; name: string; description: string }>
+  ) => {
+    setMessages(prev => [
+      ...prev,
+      {
+        id: Date.now().toString(),
+        role: "moon",
+        content,
+        options,
+        suggestions,
+      }
+    ]);
   };
 
   const addUserMessage = (content: string) => {
@@ -105,129 +150,82 @@ const MoonChatOnboarding = ({ onComplete }: MoonChatOnboardingProps) => {
     ]);
   };
 
-  const handleSend = () => {
-    if (!inputValue.trim()) return;
-    
-    const userInput = inputValue.trim();
+  const sendMessage = async (userInput: string) => {
     addUserMessage(userInput);
     setInputValue("");
     
-    processUserInput(userInput);
-  };
+    // Update clarity signal
+    const increment = getRandomIncrement(10, 15);
+    setClaritySignal(prev => Math.min(prev + increment, 95));
+    
+    // Update chat history
+    const newHistory: ChatMessage[] = [
+      ...chatHistory,
+      { role: "user", content: userInput }
+    ];
+    setChatHistory(newHistory);
+    
+    setIsTyping(true);
+    
+    try {
+      const { data, error } = await supabase.functions.invoke("moon-chat", {
+        body: { messages: newHistory },
+      });
 
-  const handleOptionSelect = (option: string) => {
-    addUserMessage(option);
-    processUserInput(option);
-  };
+      if (error) throw error;
 
-  const processUserInput = (input: string) => {
-    switch (stage) {
-      case "background":
-        setUserData(prev => ({ ...prev, background: input }));
-        setClaritySignal(prev => Math.min(prev + getRandomIncrement(8, 15), 25));
-        setTimeout(() => {
-          addMoonMessage("Got it. Do you already have an idea, or are you exploring?", [
-            "I have a specific idea",
-            "I'm still exploring",
-            "I have a few directions in mind"
-          ]);
-          setStage("idea");
-        }, 500);
-        break;
-
-      case "idea":
-        setUserData(prev => ({ ...prev, hasIdea: input }));
-        setClaritySignal(prev => Math.min(prev + getRandomIncrement(10, 18), 45));
-        setTimeout(() => {
-          addMoonMessage("Do you have any assets that might matter?\n\n(skills, time, money, location, network)");
-          setStage("assets");
-        }, 500);
-        break;
-
-      case "assets":
-        setUserData(prev => ({ ...prev, assets: input }));
-        setClaritySignal(prev => Math.min(prev + getRandomIncrement(12, 20), 65));
-        setTimeout(() => {
-          addMoonMessage("What does success look like right now?", [
-            "Learning the ropes first",
-            "Generating income quickly",
-            "Building something big"
-          ]);
-          setStage("goal");
-        }, 500);
-        break;
-
-      case "goal":
-        setUserData(prev => ({ ...prev, goal: input }));
-        setClaritySignal(prev => Math.min(prev + getRandomIncrement(10, 15), 78));
-        setTimeout(() => {
-          addMoonMessage("How much uncertainty are you comfortable with?", [
-            "I prefer proven models",
-            "Some risk is fine",
-            "I'm ready for high risk, high reward"
-          ]);
-          setStage("risk");
-        }, 500);
-        break;
-
-      case "risk":
-        setUserData(prev => ({ ...prev, risk: input }));
-        setClaritySignal(prev => Math.min(prev + getRandomIncrement(8, 12), 88));
-        setTimeout(() => {
-          addMoonMessage("I'm starting to see a few strong directions that fit you.\n\nBased on what you've shared, here are paths that make sense:");
-          setTimeout(() => {
-            addMoonMessage("Pick one that resonates:", [
-              "🍳 Cloud Kitchen — Delivery-only food business",
-              "🏠 Local Asset Monetization — Leverage what you have",
-              "💼 Skill-led Solo Business — Productize your expertise"
-            ]);
-            setStage("direction");
-          }, 1200);
-        }, 500);
-        break;
-
-      case "direction":
-        setUserData(prev => ({ ...prev, direction: input }));
-        // Set to 100% right before generating the path
-        setClaritySignal(100);
-        setTimeout(() => {
-          setStage("generating");
-          addMoonMessage("Mapping a personalized business path…");
-          
-          // Simulate generation delay
-          setTimeout(() => {
-            setStage("complete");
-            setMessages(prev => [
-              ...prev,
-              {
-                id: "path-ready",
-                role: "moon",
-                content: "PATH_READY",
-              }
-            ]);
-          }, 2500);
-        }, 500);
-        break;
+      const content = data?.content;
+      if (content) {
+        // Add assistant response to history
+        setChatHistory(prev => [...prev, { role: "assistant", content }]);
+        handleLLMResponse(content);
+      }
+    } catch (error) {
+      console.error("Error sending message:", error);
+      toast.error("Something went wrong. Please try again.");
+    } finally {
+      setIsTyping(false);
     }
   };
 
-  const handleEnterPath = () => {
-    // Extract clean business name from selection
-    const directionMap: Record<string, { type: string; name: string }> = {
-      "🍳 Cloud Kitchen — Delivery-only food business": { type: "cloud-kitchen", name: "Cloud Kitchen" },
-      "🏠 Local Asset Monetization — Leverage what you have": { type: "asset-monetization", name: "Local Asset Monetization" },
-      "💼 Skill-led Solo Business — Productize your expertise": { type: "skill-business", name: "Skill-led Solo Business" },
-    };
+  const handleSend = () => {
+    if (!inputValue.trim() || isTyping) return;
+    sendMessage(inputValue.trim());
+  };
+
+  const handleOptionSelect = (option: string) => {
+    if (isTyping) return;
+    sendMessage(option);
+  };
+
+  const handleSuggestionSelect = (suggestion: { emoji: string; name: string; description: string }) => {
+    setSelectedBusiness(suggestion);
+    setClaritySignal(100);
+    addUserMessage(`${suggestion.emoji} ${suggestion.name}`);
     
-    const selected = directionMap[userData.direction] || { type: "cloud-kitchen", name: "Cloud Kitchen" };
+    // Show path ready message
+    setTimeout(() => {
+      setMessages(prev => [
+        ...prev,
+        {
+          id: "path-ready",
+          role: "moon",
+          content: "PATH_READY",
+        }
+      ]);
+    }, 500);
+  };
+
+  const handleEnterPath = () => {
+    if (!selectedBusiness) return;
     
     onComplete({
-      name: userData.background.split(" ")[0] || "Founder",
-      businessType: selected.type,
+      name: "Founder",
+      businessType: selectedBusiness.name.toLowerCase().replace(/\s+/g, "-"),
       cuisine: "Multi-Cuisine",
       location: "India",
       investment: "₹2-5 Lakhs",
-      kitchenName: selected.name,
+      kitchenName: selectedBusiness.name,
     });
   };
 
@@ -317,7 +315,9 @@ const MoonChatOnboarding = ({ onComplete }: MoonChatOnboardingProps) => {
                         </svg>
                       </div>
                       <div>
-                        <h3 className="font-bold text-secondary text-lg">Your Business Path is Ready</h3>
+                        <h3 className="font-bold text-secondary text-lg">
+                          Your {selectedBusiness?.name} Path is Ready
+                        </h3>
                         <p className="text-sm text-muted-foreground">Built for your goals & constraints</p>
                       </div>
                     </div>
@@ -345,9 +345,32 @@ const MoonChatOnboarding = ({ onComplete }: MoonChatOnboardingProps) => {
                           <button
                             key={idx}
                             onClick={() => handleOptionSelect(option)}
-                            className="w-full text-left px-3 py-2 rounded-lg bg-background/50 hover:bg-background border border-border/50 text-sm text-secondary transition-colors"
+                            disabled={isTyping}
+                            className="w-full text-left px-3 py-2 rounded-lg bg-background/50 hover:bg-background border border-border/50 text-sm text-secondary transition-colors disabled:opacity-50"
                           >
                             {option}
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                    
+                    {/* Business suggestions */}
+                    {message.suggestions && (
+                      <div className="mt-4 space-y-2">
+                        <p className="text-xs text-muted-foreground mb-2">Pick one that resonates:</p>
+                        {message.suggestions.map((suggestion, idx) => (
+                          <button
+                            key={idx}
+                            onClick={() => handleSuggestionSelect(suggestion)}
+                            className="w-full text-left px-4 py-3 rounded-xl bg-background hover:bg-accent/50 border border-border transition-all hover:border-primary/50"
+                          >
+                            <div className="flex items-center gap-3">
+                              <span className="text-2xl">{suggestion.emoji}</span>
+                              <div>
+                                <p className="font-medium text-secondary">{suggestion.name}</p>
+                                <p className="text-xs text-muted-foreground">{suggestion.description}</p>
+                              </div>
+                            </div>
                           </button>
                         ))}
                       </div>
@@ -388,7 +411,7 @@ const MoonChatOnboarding = ({ onComplete }: MoonChatOnboardingProps) => {
       </div>
 
       {/* Input Area */}
-      {stage !== "generating" && stage !== "complete" && (
+      {!isComplete && (
         <motion.div 
           className="flex-shrink-0 p-4 border-t border-border bg-background"
           initial={{ y: 20, opacity: 0 }}
