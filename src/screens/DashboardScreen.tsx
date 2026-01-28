@@ -87,12 +87,6 @@ const learnCards = [
   { icon: OnlineOpsIcon, title: "Online Sales" },
 ];
 
-const businessTypeLabels: Record<string, string> = {
-  "cloud-kitchen": "Cloud Kitchen",
-  "cafe": "Cafe",
-  "food-truck": "Food Truck",
-  "bakery": "Home Bakery",
-};
 
 const DashboardScreen = ({ activeTab, onTabChange, userData }: DashboardScreenProps) => {
   const containerVariants = {
@@ -108,7 +102,6 @@ const DashboardScreen = ({ activeTab, onTabChange, userData }: DashboardScreenPr
     visible: { opacity: 1, y: 0 },
   };
 
-  const businessLabel = businessTypeLabels[userData.businessType] || "Cloud Kitchen";
   const currentTheme = cuisineThemes[userData.cuisine];
   const kitchenName = userData.kitchenName || `${userData.name}'s Kitchen`;
 
@@ -181,7 +174,7 @@ const DashboardScreen = ({ activeTab, onTabChange, userData }: DashboardScreenPr
                 </div>
                 <div>
                   <h2 className="font-semibold text-secondary">
-                    {businessLabel}
+                    {kitchenName}
                   </h2>
                   <p className="text-xs text-muted-foreground flex items-center gap-1 mt-0.5">
                     <MapIcon className="w-3 h-3" />
