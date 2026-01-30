@@ -34,8 +34,8 @@ const WelcomeScreen = ({
         <div className="flex flex-col items-center">
           {/* Moonshot title above orbits */}
           <motion.span 
-            className="text-3xl text-secondary tracking-wide mb-8"
-            style={{ fontFamily: "'Bowlby One', cursive" }}
+            className="text-3xl font-bold text-secondary tracking-wide mb-8"
+            style={{ fontFamily: "'DM Sans', sans-serif" }}
             initial={{ opacity: 0, y: 5 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.6, duration: 0.5 }}
