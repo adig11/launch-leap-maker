@@ -50,7 +50,7 @@ const WelcomeScreen = ({
           repeat: Infinity,
           ease: "linear"
         }}>
-            <div className="w-3 h-3 rounded-full bg-gray-800 absolute" style={{
+            <div className="w-3 h-3 rounded-full bg-gray-500 absolute" style={{
             transform: 'translateX(122px) translateX(-6px) translateY(-6px)'
           }} />
           </motion.div>
@@ -82,7 +82,7 @@ const WelcomeScreen = ({
           repeat: Infinity,
           ease: "linear"
         }}>
-            <div className="w-2 h-2 rounded-full bg-gray-300 absolute" style={{
+            <div className="w-2 h-2 rounded-full bg-gray-500 absolute" style={{
             transform: 'translateX(60px) translateX(-4px) translateY(-4px)'
           }} />
           </motion.div>
