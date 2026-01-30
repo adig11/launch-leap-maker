@@ -9,31 +9,31 @@ interface DashboardScreenProps {
   userData: UserData;
 }
 
-// Business type themes
+// Business type themes - using solid warm colors that match the page
 const businessThemes: Record<string, {
-  gradient: string;
+  bgColor: string;
   emoji: string;
   accentColor: string;
 }> = {
   "creator": {
-    gradient: "from-pink-500 via-purple-500 to-indigo-500",
+    bgColor: "bg-secondary",
     emoji: "🎬",
-    accentColor: "text-purple-600",
+    accentColor: "text-white",
   },
   "cloud-kitchen": {
-    gradient: "from-orange-500 via-amber-500 to-yellow-500",
+    bgColor: "bg-[#D4A394]",
     emoji: "🍳",
-    accentColor: "text-orange-600",
+    accentColor: "text-white",
   },
   "ecommerce": {
-    gradient: "from-emerald-500 via-teal-500 to-cyan-500",
+    bgColor: "bg-[#6B9B8E]",
     emoji: "📦",
-    accentColor: "text-emerald-600",
+    accentColor: "text-white",
   },
   "stock-trader": {
-    gradient: "from-blue-500 via-indigo-500 to-violet-500",
+    bgColor: "bg-secondary",
     emoji: "📈",
-    accentColor: "text-blue-600",
+    accentColor: "text-white",
   },
 };
 
@@ -215,7 +215,7 @@ const DashboardScreen = ({ activeTab, onTabChange, userData }: DashboardScreenPr
           {/* Current Business Path Card */}
           <motion.div
             variants={cardVariants}
-            className={`rounded-2xl bg-gradient-to-br ${currentTheme.gradient} p-5 text-white`}
+            className={`rounded-2xl ${currentTheme.bgColor} p-5 text-white`}
           >
             <div className="flex items-center gap-3 mb-3">
               <span className="text-3xl">{currentTheme.emoji}</span>
