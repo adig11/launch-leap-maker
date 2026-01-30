@@ -42,11 +42,14 @@ const JourneyScreen = ({ activeTab, onTabChange, userData }: JourneyScreenProps)
   const businessLabel = businessLabels[userData.businessType] || "Cloud Kitchen";
   const kitchenName = userData.kitchenName || businessLabel;
 
-  // Calculate total progress
-  const totalLessons = 24;
-  const completedLessons = progress.completedLessons.length;
-  const progressPercent = Math.round((completedLessons / totalLessons) * 100);
-  const currentPhase = Math.min(Math.floor(completedLessons / 5) + 1, 5);
+  // Mock data for journey
+  const mockData = {
+    totalLessons: 24,
+    completedLessons: 8,
+    progressPercent: 34,
+    currentPhase: 3,
+    tasksRemaining: 3,
+  };
 
   const handleLessonClick = (lesson: LessonData) => {
     setActiveLesson(lesson);
@@ -88,7 +91,7 @@ const JourneyScreen = ({ activeTab, onTabChange, userData }: JourneyScreenProps)
             </button>
             <div className="text-center">
               <h1 className="font-bold text-secondary">{businessLabel}</h1>
-              <p className="text-xs text-primary font-medium tracking-wide uppercase">Founder Journey</p>
+              <p className="text-xs text-primary font-medium tracking-wide uppercase">Adi's Journey</p>
             </div>
             <button className="w-10 h-10 rounded-full bg-white border border-border flex items-center justify-center shadow-sm">
               <MoreHorizontal className="w-5 h-5 text-secondary" />
@@ -106,18 +109,18 @@ const JourneyScreen = ({ activeTab, onTabChange, userData }: JourneyScreenProps)
           <div className="flex items-center justify-between mb-1">
             <p className="text-xs font-medium text-muted-foreground tracking-wide uppercase">Overall Progress</p>
             <span className="px-2 py-1 rounded-full bg-[#FDF0E8] text-xs font-medium text-primary">
-              Phase {currentPhase}/5
+              Phase {mockData.currentPhase}/5
             </span>
           </div>
           <div className="flex items-baseline gap-1 mb-3">
-            <span className="text-3xl font-bold text-secondary">{progressPercent}%</span>
+            <span className="text-3xl font-bold text-secondary">{mockData.progressPercent}%</span>
             <span className="text-muted-foreground text-sm">to Launch</span>
           </div>
           <div className="h-2 bg-muted rounded-full overflow-hidden">
             <motion.div
               className="h-full bg-gradient-to-r from-primary to-[#E8956D] rounded-full"
               initial={{ width: 0 }}
-              animate={{ width: `${progressPercent}%` }}
+              animate={{ width: `${mockData.progressPercent}%` }}
               transition={{ duration: 0.8, ease: "easeOut" }}
             />
           </div>
@@ -133,7 +136,7 @@ const JourneyScreen = ({ activeTab, onTabChange, userData }: JourneyScreenProps)
           <p className="text-xs font-medium text-primary tracking-wide uppercase mb-2">Active Step</p>
           <h2 className="text-xl font-bold text-secondary mb-2">Kitchen Setup & Branding</h2>
           <p className="text-sm text-muted-foreground mb-4">
-            Complete 3 more tasks to unlock Menu Validation.
+            Complete {mockData.tasksRemaining} more tasks to unlock Menu Validation.
           </p>
           <Button 
             className="w-full py-5 text-base font-semibold rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground"

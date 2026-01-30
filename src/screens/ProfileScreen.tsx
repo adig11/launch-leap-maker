@@ -22,23 +22,29 @@ const businessLabels: Record<string, string> = {
 const ProfileScreen = ({ activeTab, onTabChange, userData, onResetOnboarding }: ProfileScreenProps) => {
   const { progress } = useProgress();
   
-  const completedLessons = progress.completedLessons.length;
-  const totalLessons = 24;
-  const launchReadiness = Math.round((completedLessons / totalLessons) * 100);
+  // Mock data for profile
+  const mockData = {
+    lessonsCompleted: 8,
+    totalLessons: 24,
+    timeInvested: 4.5,
+    dayStreak: 7,
+    launchReadiness: 34,
+  };
+  
   const businessLabel = businessLabels[userData.businessType] || "Cloud Kitchen";
-  const firstName = userData.name?.split(" ")[0] || "Founder";
+  const firstName = userData.name?.split(" ")[0] || "Adi";
 
   const stats = [
-    { icon: Target, label: "Lessons Done", value: `${completedLessons}/${totalLessons}` },
-    { icon: Clock, label: "Time Invested", value: `${(progress.totalTimeMinutes / 60).toFixed(1)} hrs` },
-    { icon: Zap, label: "Day Streak", value: progress.currentStreak || 0 },
+    { icon: Target, label: "Lessons Done", value: `${mockData.lessonsCompleted}/${mockData.totalLessons}` },
+    { icon: Clock, label: "Time Invested", value: `${mockData.timeInvested} hrs` },
+    { icon: Zap, label: "Day Streak", value: mockData.dayStreak },
   ];
 
   const badges = [
-    { id: 1, title: "First Step", unlocked: completedLessons >= 1, icon: "🚀" },
-    { id: 2, title: "Quick Learner", unlocked: completedLessons >= 5, icon: "⚡" },
-    { id: 3, title: "Consistent", unlocked: progress.currentStreak >= 3, icon: "🔥" },
-    { id: 4, title: "Launch Ready", unlocked: launchReadiness >= 80, icon: "🎯" },
+    { id: 1, title: "First Step", unlocked: true, icon: "🚀" },
+    { id: 2, title: "Quick Learner", unlocked: true, icon: "⚡" },
+    { id: 3, title: "Consistent", unlocked: true, icon: "🔥" },
+    { id: 4, title: "Launch Ready", unlocked: false, icon: "🎯" },
   ];
 
   return (
@@ -69,7 +75,7 @@ const ProfileScreen = ({ activeTab, onTabChange, userData, onResetOnboarding }: 
                 {firstName.charAt(0)}
               </div>
               <div>
-                <h2 className="text-lg font-bold text-secondary">{userData.name || "Founder"}</h2>
+                <h2 className="text-lg font-bold text-secondary">{userData.name || "Adi"}</h2>
                 <p className="text-sm text-muted-foreground">{businessLabel}</p>
                 <p className="text-xs text-muted-foreground mt-0.5">{userData.location}</p>
               </div>
@@ -79,13 +85,13 @@ const ProfileScreen = ({ activeTab, onTabChange, userData, onResetOnboarding }: 
             <div className="bg-[#F8F6F3] rounded-xl p-4">
               <div className="flex items-center justify-between mb-2">
                 <span className="text-sm font-medium text-secondary">Launch Readiness</span>
-                <span className="text-sm font-bold text-primary">{launchReadiness}%</span>
+                <span className="text-sm font-bold text-primary">{mockData.launchReadiness}%</span>
               </div>
               <div className="h-2 bg-muted rounded-full overflow-hidden">
                 <motion.div
                   className="h-full bg-gradient-to-r from-primary to-[#E8956D] rounded-full"
                   initial={{ width: 0 }}
-                  animate={{ width: `${launchReadiness}%` }}
+                  animate={{ width: `${mockData.launchReadiness}%` }}
                   transition={{ duration: 0.8 }}
                 />
               </div>

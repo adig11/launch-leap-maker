@@ -18,15 +18,15 @@ const DashboardScreen = ({
   const {
     progress
   } = useProgress();
-  const firstName = userData.name?.split(" ")[0] || "Founder";
+  const firstName = userData.name?.split(" ")[0] || "Adi";
   
   // Mock data for dashboard
   const mockData = {
     launchProgress: 34,
     nextTask: "Register your FSSAI license",
-    banking: { pending: 2, total: 5 },
+    banking: { completed: 2, total: 5 },
     legal: { current: 3, total: 6 },
-    community: { members: 1247, category: "Cloud Kitchen" },
+    community: { members: 1247, category: userData.kitchenName || "Cloud Kitchen" },
   };
 
   // Get time-based greeting
@@ -123,7 +123,7 @@ const DashboardScreen = ({
                 </svg>
               </div>
               <h3 className="font-semibold text-secondary mb-1">Banking &<br />Finance</h3>
-              <p className="text-xs text-muted-foreground">{mockData.banking.pending} of {mockData.banking.total} tasks done</p>
+              <p className="text-xs text-muted-foreground">{mockData.banking.completed} of {mockData.banking.total} tasks done</p>
             </motion.div>
 
             {/* Legal Setup Card */}
