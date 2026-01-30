@@ -41,7 +41,7 @@ const WelcomeScreen = ({
           
           {/* Center dot */}
           <div className="absolute inset-0 flex items-center justify-center">
-            <motion.div className="w-5 h-5 rounded-full bg-primary" animate={{
+            <motion.div className="w-10 h-10 rounded-full bg-primary" animate={{
             scale: [1, 1.2, 1]
           }} transition={{
             duration: 2,
