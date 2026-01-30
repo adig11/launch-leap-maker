@@ -137,13 +137,13 @@ const DashboardScreen = ({ activeTab, onTabChange, userData }: DashboardScreenPr
           {/* Founder's Network Card */}
           <motion.div 
             variants={cardVariants} 
-            className="rounded-2xl bg-secondary p-5 mb-4"
+            className="rounded-2xl bg-[hsl(25,30%,88%)] p-5 mb-4"
           >
-            <h3 className="font-semibold text-white text-lg mb-2">Founder's Network</h3>
-            <p className="text-sm text-white/70 mb-4">
+            <h3 className="font-semibold text-secondary text-lg mb-2">Founder's Network</h3>
+            <p className="text-sm text-secondary/70 mb-4">
               Connect with 500+ Indian founders who've<br />scaled to Series A.
             </p>
-            <button className="px-4 py-2 rounded-lg bg-white text-secondary text-sm font-medium">
+            <button className="px-4 py-2 rounded-lg bg-secondary text-white text-sm font-medium">
               Explore Community
             </button>
           </motion.div>
