@@ -1,4 +1,6 @@
 import { motion } from "framer-motion";
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
 import { ChevronRightIcon } from "@/components/icons";
 
 interface BusinessTypeScreenProps {
@@ -6,72 +8,93 @@ interface BusinessTypeScreenProps {
   onBack: () => void;
 }
 
-// Business type configurations with solid warm colors matching the page
+// Business type configurations with icons
 const businessTypes = [
   {
     id: "creator",
-    name: "Insta/YT Creator",
-    description: "Build your personal brand & monetize content",
-    emoji: "🎬",
-    iconBg: "bg-secondary",
+    name: "Insta/YT creator",
+    description: "Build your personal brand",
+    icon: (
+      <svg viewBox="0 0 24 24" fill="none" className="w-6 h-6">
+        <rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" strokeWidth="2"/>
+        <path d="M10 9L15 12L10 15V9Z" fill="currentColor"/>
+      </svg>
+    ),
   },
   {
     id: "cloud-kitchen",
     name: "Cloud Kitchen",
-    description: "Launch a delivery-first food business",
-    emoji: "🍳",
-    iconBg: "bg-[#D4A394]",
+    description: "Master food operations",
+    icon: (
+      <svg viewBox="0 0 24 24" fill="none" className="w-6 h-6">
+        <path d="M6 5V19M10 5V19M14 5V19M18 5V19" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+        <path d="M4 8H20M4 16H20" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+      </svg>
+    ),
   },
   {
     id: "ecommerce",
-    name: "Ecommerce/Dropshipping",
-    description: "Sell products online without inventory",
-    emoji: "📦",
-    iconBg: "bg-[#6B9B8E]",
+    name: "Ecommerce",
+    description: "Launch your storefront",
+    icon: (
+      <svg viewBox="0 0 24 24" fill="none" className="w-6 h-6">
+        <path d="M3 3H5L5.4 5M7 13H17L21 5H5.4M7 13L5.4 5M7 13L4.70711 15.2929C4.07714 15.9229 4.52331 17 5.41421 17H17M17 17C15.8954 17 15 17.8954 15 19C15 20.1046 15.8954 21 17 21C18.1046 21 19 20.1046 19 19C19 17.8954 18.1046 17 17 17ZM9 19C9 20.1046 8.10457 21 7 21C5.89543 21 5 20.1046 5 19C5 17.8954 5.89543 17 7 17C8.10457 17 9 17.8954 9 19Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+      </svg>
+    ),
   },
   {
     id: "stock-trader",
     name: "Stock Trader",
-    description: "Master markets & build trading income",
-    emoji: "📈",
-    iconBg: "bg-secondary",
+    description: "Analysis & portfolio mgmt",
+    icon: (
+      <svg viewBox="0 0 24 24" fill="none" className="w-6 h-6">
+        <path d="M3 17L9 11L13 15L21 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+        <path d="M17 7H21V11" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+      </svg>
+    ),
   },
 ];
 
 const BusinessTypeScreen = ({ onSelect, onBack }: BusinessTypeScreenProps) => {
+  const [selected, setSelected] = useState<string | null>(null);
+
+  const handleContinue = () => {
+    if (selected) {
+      const business = businessTypes.find(b => b.id === selected);
+      if (business) {
+        onSelect(business.id, business.name);
+      }
+    }
+  };
+
   return (
     <div className="min-h-screen bg-[#F8F6F3] subtle-grid flex flex-col relative overflow-hidden">
-
-      {/* Header */}
+      {/* Header with back button and progress indicator */}
       <motion.div 
-        className="px-5 pt-6 pb-4 relative z-10"
+        className="px-5 pt-6 pb-4 flex items-center justify-between"
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        {/* Back button and logo */}
-        <div className="flex items-center gap-4 mb-8">
-          <button
-            onClick={onBack}
-            className="w-10 h-10 rounded-xl bg-white border border-border flex items-center justify-center text-secondary hover:bg-muted transition-colors shadow-sm"
-          >
-            <svg viewBox="0 0 24 24" fill="none" className="w-5 h-5">
-              <path d="M15 18L9 12L15 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-          </button>
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#E8B4A6] to-[#D4A394] flex items-center justify-center">
-              <svg viewBox="0 0 24 24" fill="none" className="w-4 h-4 text-white">
-                <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" fill="currentColor"/>
-              </svg>
-            </div>
-            <span className="font-bold text-secondary">Moonshot</span>
-          </div>
+        <button
+          onClick={onBack}
+          className="w-10 h-10 rounded-full bg-white border border-border flex items-center justify-center shadow-sm"
+        >
+          <svg viewBox="0 0 24 24" fill="none" className="w-5 h-5 text-secondary">
+            <path d="M15 18L9 12L15 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+        </button>
+        
+        {/* Progress indicator */}
+        <div className="flex items-center gap-2">
+          <div className="w-8 h-1.5 rounded-full bg-primary" />
+          <div className="w-8 h-1.5 rounded-full bg-muted" />
+          <div className="w-8 h-1.5 rounded-full bg-muted" />
         </div>
       </motion.div>
 
       {/* Main content */}
-      <div className="flex-1 px-5 relative z-10">
+      <div className="flex-1 px-5">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -79,10 +102,12 @@ const BusinessTypeScreen = ({ onSelect, onBack }: BusinessTypeScreenProps) => {
         >
           {/* Title section */}
           <div className="mb-6">
-            <p className="text-sm font-medium text-primary tracking-wide uppercase mb-2">Choose Your Path</p>
             <h1 className="text-3xl font-bold text-secondary leading-tight">
-              What do you want<br/>to build?
+              What do you want<br />to build?
             </h1>
+            <p className="text-muted-foreground mt-2">
+              Select your path to personalize your roadmap.
+            </p>
           </div>
 
           {/* Business type cards */}
@@ -90,42 +115,55 @@ const BusinessTypeScreen = ({ onSelect, onBack }: BusinessTypeScreenProps) => {
             {businessTypes.map((business, index) => (
               <motion.button
                 key={business.id}
-                onClick={() => onSelect(business.id, business.name)}
-                className={`w-full p-4 rounded-2xl bg-white border border-border/50 shadow-sm transition-all flex items-center gap-4 text-left group hover:shadow-lg hover:scale-[1.01] active:scale-[0.99] hover:border-primary/30`}
+                onClick={() => setSelected(business.id)}
+                className={`w-full p-4 rounded-2xl bg-white border-2 transition-all flex items-center gap-4 text-left ${
+                  selected === business.id 
+                    ? "border-primary shadow-md" 
+                    : "border-transparent shadow-sm hover:shadow-md"
+                }`}
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.3 + index * 0.1 }}
+                transition={{ delay: 0.3 + index * 0.08 }}
               >
-                {/* Emoji icon */}
-                <div className={`w-14 h-14 rounded-2xl ${business.iconBg} flex items-center justify-center text-2xl shadow-md`}>
-                  {business.emoji}
+                {/* Icon */}
+                <div className="w-12 h-12 rounded-xl bg-[#FDF0E8] flex items-center justify-center text-primary">
+                  {business.icon}
                 </div>
                 
                 <div className="flex-1 min-w-0">
-                  <h3 className="font-semibold text-secondary text-base">{business.name}</h3>
-                  <p className="text-sm text-muted-foreground mt-0.5 truncate">
+                  <h3 className="font-semibold text-secondary">{business.name}</h3>
+                  <p className="text-sm text-muted-foreground">
                     {business.description}
                   </p>
                 </div>
                 
-                <div className="w-8 h-8 rounded-full bg-muted/50 flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-all">
-                  <ChevronRightIcon className="w-4 h-4" />
-                </div>
+                <ChevronRightIcon className="w-5 h-5 text-muted-foreground" />
               </motion.button>
             ))}
           </div>
         </motion.div>
       </div>
 
-      {/* Bottom hint */}
+      {/* Bottom CTA */}
       <motion.div 
-        className="px-5 pb-8 pt-4 relative z-10"
+        className="px-5 pb-6"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 0.8 }}
+        transition={{ delay: 0.7 }}
       >
-        <p className="text-xs text-center text-muted-foreground">
-          Each path includes tailored modules for the Indian market
+        <Button 
+          onClick={handleContinue}
+          disabled={!selected}
+          className={`w-full py-6 text-base font-semibold rounded-2xl transition-all ${
+            selected 
+              ? "bg-primary hover:bg-primary/90 text-primary-foreground" 
+              : "bg-[#E8DDD6] text-muted-foreground cursor-not-allowed"
+          }`}
+        >
+          Continue to My Path
+        </Button>
+        <p className="text-xs text-center text-muted-foreground mt-4">
+          You can change your selection later in the Path settings.
         </p>
       </motion.div>
     </div>

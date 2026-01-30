@@ -1,13 +1,14 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import MobileLayout from "@/components/MobileLayout";
-import { CheckIcon } from "@/components/icons";
-import { ChevronRight, ChevronDown, Play, Clock, CheckCircle2, Hourglass } from "lucide-react";
+import { ChevronRightIcon } from "@/components/icons";
 import { UserData } from "@/pages/Index";
 import { useProgress } from "@/hooks/useProgress";
 import { getLessonsForModule, LessonData, getModuleInfo } from "@/data/lessonData";
 import LessonScreen from "@/screens/LessonScreen";
 import LessonCompleteScreen from "@/screens/LessonCompleteScreen";
+import { Button } from "@/components/ui/button";
+import { MoreHorizontal, ChevronLeft, Lock, CheckCircle2 } from "lucide-react";
 
 interface JourneyScreenProps {
   activeTab: "home" | "journey" | "profile";
@@ -15,68 +16,37 @@ interface JourneyScreenProps {
   userData: UserData;
 }
 
-// Cuisine themes
-const cuisineThemes: Record<string, {
-  gradient: string;
-  emoji: string;
-}> = {
-  "North Indian": { gradient: "from-amber-600 via-orange-500 to-red-500", emoji: "🍛" },
-  "South Indian": { gradient: "from-green-600 via-emerald-500 to-yellow-500", emoji: "🥥" },
-  "Chinese": { gradient: "from-red-600 via-rose-500 to-amber-500", emoji: "🥢" },
-  "Italian": { gradient: "from-green-600 via-white to-red-500", emoji: "🍝" },
-  "Continental": { gradient: "from-slate-600 via-blue-500 to-indigo-500", emoji: "🍽️" },
-  "Mughlai": { gradient: "from-amber-700 via-yellow-600 to-orange-600", emoji: "👑" },
-  "Street Food": { gradient: "from-yellow-500 via-orange-500 to-red-400", emoji: "🍿" },
-  "Biryani": { gradient: "from-orange-600 via-amber-500 to-yellow-500", emoji: "🍚" },
-  "Multi-Cuisine": { gradient: "from-purple-500 via-pink-500 to-blue-500", emoji: "🌍" },
-};
-
-// Module data with titles
-const moduleData = [
-  { id: 1, title: "Regulations & Licenses" },
-  { id: 2, title: "Business Structure & Costs" },
-  { id: 3, title: "Kitchen Setup & Equipment" },
-  { id: 4, title: "Menu Design & Pricing" },
-  { id: 5, title: "Supplier Sourcing" },
-  { id: 6, title: "Packaging & Branding" },
-  { id: 7, title: "Online Platforms" },
-  { id: 8, title: "Daily Operations SOPs" },
-  { id: 9, title: "Unit Economics" },
-  { id: 10, title: "Go-Live Checklist" },
+// Journey phases for cloud kitchen (can be customized per business type)
+const journeyPhases = [
+  { id: 1, title: "Concept & Research", status: "completed", completedDate: "Completed on Oct 12" },
+  { id: 2, title: "Legal & Licensing", status: "completed", completedDate: "Completed on Oct 28" },
+  { id: 3, title: "Kitchen Setup", status: "current", completedDate: "Current Phase • 2/5 Tasks" },
+  { id: 4, title: "Menu Validation", status: "locked", completedDate: "Upcoming Step" },
+  { id: 5, title: "Go-to-Market", status: "locked", completedDate: "Final Milestone" },
 ];
 
-type LessonStatus = "pending" | "in_progress" | "completed";
+const businessLabels: Record<string, string> = {
+  "creator": "Content Creator",
+  "cloud-kitchen": "Cloud Kitchen",
+  "ecommerce": "Ecommerce",
+  "stock-trader": "Stock Trader",
+};
 
 const JourneyScreen = ({ activeTab, onTabChange, userData }: JourneyScreenProps) => {
-  const [expandedModule, setExpandedModule] = useState<number | null>(1);
   const [activeLesson, setActiveLesson] = useState<LessonData | null>(null);
   const [showComplete, setShowComplete] = useState(false);
   const [lessonScore, setLessonScore] = useState({ correct: 0, total: 0 });
 
   const { progress, completeLesson, isLessonCompleted, getModuleCompletedCount } = useProgress();
 
-  const currentTheme = cuisineThemes[userData.cuisine];
-  const kitchenName = userData.kitchenName || `${userData.name}'s Kitchen`;
+  const businessLabel = businessLabels[userData.businessType] || "Cloud Kitchen";
+  const kitchenName = userData.kitchenName || businessLabel;
 
   // Calculate total progress
-  const totalLessons = moduleData.reduce((acc, m) => acc + getModuleInfo(m.id).lessonCount, 0);
+  const totalLessons = 24;
   const completedLessons = progress.completedLessons.length;
-  const progressPercent = (completedLessons / totalLessons) * 100;
-
-  const getLessonStatus = (lessonId: string, moduleId: number, lessonIndex: number): LessonStatus => {
-    if (isLessonCompleted(lessonId)) return "completed";
-    
-    // Check if this is the first incomplete lesson in the module (in progress)
-    const moduleLessons = getLessonsForModule(moduleId);
-    const completedInModule = moduleLessons.filter(l => isLessonCompleted(l.id)).length;
-    if (lessonIndex === completedInModule) return "in_progress";
-    
-    return "pending";
-  };
-
-  const handleModuleClick = (moduleId: number) => {
-    setExpandedModule(expandedModule === moduleId ? null : moduleId);
-  };
+  const progressPercent = Math.round((completedLessons / totalLessons) * 100);
+  const currentPhase = Math.min(Math.floor(completedLessons / 5) + 1, 5);
 
   const handleLessonClick = (lesson: LessonData) => {
     setActiveLesson(lesson);
@@ -104,169 +74,123 @@ const JourneyScreen = ({ activeTab, onTabChange, userData }: JourneyScreenProps)
     <>
       <MobileLayout showNav activeTab={activeTab} onTabChange={onTabChange}>
         {/* Header */}
-        <div className={`sticky top-0 z-10 px-5 py-4 bg-gradient-to-r ${currentTheme?.gradient || "from-primary to-accent"}`}>
-          <div className="flex items-center gap-2 mb-3">
-            <span className="text-xl">{currentTheme?.emoji || "🍳"}</span>
-            <h1 className="text-lg font-bold text-white drop-shadow-sm">
-              {kitchenName}
-            </h1>
-          </div>
-          {/* Progress Bar */}
-          <div className="mb-2">
-            <div className="flex justify-between items-center mb-1">
-              <span className="text-xs text-white/90 font-medium">Your Progress</span>
-              <span className="text-xs text-white/90 font-medium">{completedLessons} of {totalLessons} tasks</span>
+        <motion.div 
+          className="px-5 pt-6 pb-4"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+        >
+          <div className="flex items-center justify-between mb-4">
+            <button 
+              onClick={() => onTabChange("home")}
+              className="w-10 h-10 rounded-full bg-white border border-border flex items-center justify-center shadow-sm"
+            >
+              <ChevronLeft className="w-5 h-5 text-secondary" />
+            </button>
+            <div className="text-center">
+              <h1 className="font-bold text-secondary">{businessLabel}</h1>
+              <p className="text-xs text-primary font-medium tracking-wide uppercase">Founder Journey</p>
             </div>
-            <div className="h-2.5 bg-white/30 rounded-full overflow-hidden">
-              <motion.div
-                className="h-full bg-white rounded-full"
-                initial={{ width: 0 }}
-                animate={{ width: `${progressPercent}%` }}
-                transition={{ duration: 0.8, ease: "easeOut" }}
-              />
-            </div>
+            <button className="w-10 h-10 rounded-full bg-white border border-border flex items-center justify-center shadow-sm">
+              <MoreHorizontal className="w-5 h-5 text-secondary" />
+            </button>
           </div>
-        </div>
+        </motion.div>
 
-        {/* Module Cards */}
-        <div className="px-4 py-4 space-y-4">
-          {moduleData.map((module) => {
-            const moduleInfo = getModuleInfo(module.id);
-            const completedInModule = getModuleCompletedCount(module.id);
-            const isExpanded = expandedModule === module.id;
-            const lessons = getLessonsForModule(module.id);
-            const moduleProgress = (completedInModule / moduleInfo.lessonCount) * 100;
+        {/* Overall Progress Card */}
+        <motion.div 
+          className="mx-5 mb-4 rounded-2xl bg-white border border-border p-5 shadow-sm"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 }}
+        >
+          <div className="flex items-center justify-between mb-1">
+            <p className="text-xs font-medium text-muted-foreground tracking-wide uppercase">Overall Progress</p>
+            <span className="px-2 py-1 rounded-full bg-[#FDF0E8] text-xs font-medium text-primary">
+              Phase {currentPhase}/5
+            </span>
+          </div>
+          <div className="flex items-baseline gap-1 mb-3">
+            <span className="text-3xl font-bold text-secondary">{progressPercent}%</span>
+            <span className="text-muted-foreground text-sm">to Launch</span>
+          </div>
+          <div className="h-2 bg-muted rounded-full overflow-hidden">
+            <motion.div
+              className="h-full bg-gradient-to-r from-primary to-[#E8956D] rounded-full"
+              initial={{ width: 0 }}
+              animate={{ width: `${progressPercent}%` }}
+              transition={{ duration: 0.8, ease: "easeOut" }}
+            />
+          </div>
+        </motion.div>
 
-            return (
+        {/* Active Step Card */}
+        <motion.div 
+          className="mx-5 mb-6 rounded-2xl bg-[#FDF0E8] p-5"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+        >
+          <p className="text-xs font-medium text-primary tracking-wide uppercase mb-2">Active Step</p>
+          <h2 className="text-xl font-bold text-secondary mb-2">Kitchen Setup & Branding</h2>
+          <p className="text-sm text-muted-foreground mb-4">
+            Complete 3 more tasks to unlock Menu Validation.
+          </p>
+          <Button 
+            className="w-full py-5 text-base font-semibold rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground"
+          >
+            Continue Roadmap
+            <ChevronRightIcon className="w-5 h-5 ml-1" />
+          </Button>
+        </motion.div>
+
+        {/* Journey Timeline */}
+        <div className="px-5 pb-8">
+          <div className="relative">
+            {/* Vertical line */}
+            <div className="absolute left-[15px] top-0 bottom-0 w-0.5 bg-muted" />
+
+            {journeyPhases.map((phase, index) => (
               <motion.div
-                key={module.id}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="bg-card rounded-xl border border-border overflow-hidden shadow-sm"
+                key={phase.id}
+                className="relative flex items-start gap-4 pb-6 last:pb-0"
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.3 + index * 0.08 }}
               >
-                {/* Module Header */}
-                <button
-                  onClick={() => handleModuleClick(module.id)}
-                  className="w-full p-4 flex items-center justify-between text-left hover:bg-muted/30 transition-colors"
-                >
-                  <div className="flex-1">
-                    <h2 className="font-semibold text-foreground text-base mb-2">
-                      {module.title}
-                    </h2>
-                    {/* Module Progress Grid - Visual representation of tasks */}
-                    <div className="flex flex-wrap gap-1.5 mb-2">
-                      {Array.from({ length: Math.min(moduleInfo.lessonCount, 20) }).map((_, i) => (
-                        <div
-                          key={i}
-                          className={`w-8 h-2 rounded-sm ${
-                            i < completedInModule 
-                              ? "bg-green-500" 
-                              : i === completedInModule 
-                              ? "bg-orange-500" 
-                              : "bg-muted"
-                          }`}
-                        />
-                      ))}
+                {/* Status indicator */}
+                <div className="relative z-10">
+                  {phase.status === "completed" ? (
+                    <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center">
+                      <CheckCircle2 className="w-4 h-4 text-white" />
                     </div>
-                    <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                      <span>{completedInModule} of {moduleInfo.lessonCount} tasks completed</span>
+                  ) : phase.status === "current" ? (
+                    <div className="w-8 h-8 rounded-full bg-white border-2 border-primary flex items-center justify-center">
+                      <div className="w-2.5 h-2.5 rounded-full bg-primary" />
                     </div>
-                  </div>
-                  <motion.div
-                    animate={{ rotate: isExpanded ? 90 : 0 }}
-                    transition={{ duration: 0.2 }}
-                    className="ml-2"
-                  >
-                    <ChevronRight className="w-5 h-5 text-muted-foreground" />
-                  </motion.div>
-                </button>
-
-                {/* Expanded Lessons */}
-                <AnimatePresence>
-                  {isExpanded && (
-                    <motion.div
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: "auto", opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      transition={{ duration: 0.3 }}
-                      className="overflow-hidden border-t border-border"
-                    >
-                      <div className="p-3 space-y-2 max-h-[400px] overflow-y-auto">
-                        {lessons.map((lesson, index) => {
-                          const status = getLessonStatus(lesson.id, module.id, index);
-                          
-                          return (
-                            <motion.button
-                              key={lesson.id}
-                              initial={{ opacity: 0, x: -10 }}
-                              animate={{ opacity: 1, x: 0 }}
-                              transition={{ delay: index * 0.03 }}
-                              onClick={() => handleLessonClick(lesson)}
-                              className={`w-full p-4 rounded-xl text-left transition-all ${
-                                status === "in_progress"
-                                  ? "bg-orange-50 border-2 border-orange-200"
-                                  : status === "completed"
-                                  ? "bg-muted/30"
-                                  : "bg-muted/20 hover:bg-muted/40"
-                              }`}
-                            >
-                              {/* Status Badge */}
-                              <div className="flex items-center gap-1.5 mb-2">
-                                {status === "completed" ? (
-                                  <>
-                                    <CheckCircle2 className="w-4 h-4 text-green-600" />
-                                    <span className="text-xs font-medium text-green-700">Completed</span>
-                                  </>
-                                ) : status === "in_progress" ? (
-                                  <>
-                                    <Hourglass className="w-4 h-4 text-orange-600" />
-                                    <span className="text-xs font-medium text-orange-600">In Progress</span>
-                                  </>
-                                ) : (
-                                  <>
-                                    <Play className="w-3.5 h-3.5 text-muted-foreground" />
-                                    <span className="text-xs font-medium text-muted-foreground">Pending</span>
-                                  </>
-                                )}
-                              </div>
-
-                              {/* Lesson Title */}
-                              <h3 className={`font-medium text-sm mb-3 ${
-                                status === "completed" ? "text-muted-foreground" : "text-foreground"
-                              }`}>
-                                {lesson.title}
-                              </h3>
-
-                              {/* Action Buttons */}
-                              <div className="flex items-center gap-2">
-                                <span className={`px-3 py-1.5 rounded-md text-xs font-medium border ${
-                                  status === "completed"
-                                    ? "bg-muted border-border text-muted-foreground"
-                                    : "bg-muted border-border text-muted-foreground"
-                                }`}>
-                                  {status === "completed" ? "Review" : "Start"}
-                                </span>
-                                <span className={`px-3 py-1.5 rounded-md text-xs font-medium ${
-                                  status === "completed"
-                                    ? "bg-green-100 text-green-700"
-                                    : "border border-border text-muted-foreground"
-                                }`}>
-                                  {status === "completed" ? "✓ Done" : "Mark Complete"}
-                                </span>
-                                <span className="px-3 py-1.5 rounded-md text-xs font-medium bg-orange-500 text-white">
-                                  {lesson.duration}
-                                </span>
-                              </div>
-                            </motion.button>
-                          );
-                        })}
-                      </div>
-                    </motion.div>
+                  ) : (
+                    <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center">
+                      <Lock className="w-3.5 h-3.5 text-muted-foreground" />
+                    </div>
                   )}
-                </AnimatePresence>
+                </div>
+
+                {/* Phase content */}
+                <div className="flex-1 pt-1">
+                  <h3 className={`font-semibold ${
+                    phase.status === "locked" ? "text-muted-foreground" : 
+                    phase.status === "current" ? "text-primary" : "text-secondary"
+                  }`}>
+                    {phase.title}
+                  </h3>
+                  <p className={`text-sm ${
+                    phase.status === "locked" ? "text-muted-foreground/60" : "text-muted-foreground"
+                  }`}>
+                    {phase.completedDate}
+                  </p>
+                </div>
               </motion.div>
-            );
-          })}
+            ))}
+          </div>
         </div>
       </MobileLayout>
 
