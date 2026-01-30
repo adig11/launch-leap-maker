@@ -75,7 +75,7 @@ const ProfileScreen = ({ activeTab, onTabChange, userData, onResetOnboarding }: 
                 {firstName.charAt(0)}
               </div>
               <div>
-                <h2 className="text-lg font-bold text-secondary">{userData.name || "Adi"}</h2>
+                <h2 className="text-lg font-bold text-secondary">Adi</h2>
                 <p className="text-sm text-muted-foreground">{businessLabel}</p>
                 <p className="text-xs text-muted-foreground mt-0.5">{userData.location}</p>
               </div>
