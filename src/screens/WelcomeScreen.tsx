@@ -88,7 +88,16 @@ const WelcomeScreen = ({
           </motion.div>
           
           {/* Center dot */}
-          <div className="absolute inset-0 flex items-center justify-center">
+          <div className="absolute inset-0 flex flex-col items-center justify-center">
+            <motion.span 
+              className="text-2xl font-bold text-secondary tracking-wide mb-2"
+              style={{ fontFamily: "'Poppins', sans-serif" }}
+              initial={{ opacity: 0, y: 5 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.6, duration: 0.5 }}
+            >
+              Moonshot
+            </motion.span>
             <motion.div className="w-10 h-10 rounded-full bg-primary" animate={{
             scale: [1, 1.2, 1]
           }} transition={{
