@@ -23,16 +23,11 @@ const WelcomeScreen = ({
 
       {/* Central illustration with crystal prism */}
       <motion.div 
-        className="flex-1 flex flex-col items-center justify-center px-6" 
+        className="flex-1 flex items-center justify-center px-6" 
         initial={{ opacity: 0, scale: 0.9 }} 
         animate={{ opacity: 1, scale: 1 }} 
         transition={{ duration: 0.8, delay: 0.2 }}
       >
-        {/* Moonshot title */}
-        <h1 className="text-4xl font-bold text-secondary tracking-wide mb-4" style={{ fontFamily: 'Poppins, sans-serif' }}>
-          Moonshot
-        </h1>
-        
         {/* Crystal prism image - rays are part of the image */}
         <img 
           src={crystalPrism} 
