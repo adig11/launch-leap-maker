@@ -59,13 +59,7 @@ const WelcomeScreen = ({
         }} transition={{
           delay: 0.5
         }}>
-            <svg viewBox="0 0 48 48" className="w-16 h-16 text-primary">
-              {/* 4-point star */}
-              <path d="M24 8L26 20L38 22L26 24L24 36L22 24L10 22L22 20L24 8Z" fill="currentColor" />
-              {/* Small stars */}
-              <circle cx="34" cy="12" r="2" fill="currentColor" opacity="0.6" />
-              <circle cx="38" cy="18" r="1.5" fill="currentColor" opacity="0.4" />
-            </svg>
+            
           </motion.div>
         </div>
       </motion.div>
