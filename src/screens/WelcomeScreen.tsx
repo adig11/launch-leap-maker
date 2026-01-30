@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
+import crystalPrism from "@/assets/crystal-prism.png";
 interface WelcomeScreenProps {
   onStart: () => void;
 }
@@ -20,95 +21,56 @@ const WelcomeScreen = ({
         
       </motion.div>
 
-      {/* Central illustration with concentric circles */}
+      {/* Central illustration with crystal prism */}
       <motion.div className="flex-1 flex items-center justify-center px-6" initial={{
-      opacity: 0,
-      scale: 0.9
-    }} animate={{
-      opacity: 1,
-      scale: 1
-    }} transition={{
-      duration: 0.8,
-      delay: 0.2
-    }}>
-        <div className="relative w-64 h-64">
-          {/* Outer circle */}
-          <div className="absolute inset-0 rounded-full border-[12px] border-[#EBE6E1]" />
-          {/* Middle circle */}
-          <div className="absolute inset-8 rounded-full border-[10px] border-[#F0EBE6]" />
-          {/* Inner circle */}
-          <div className="absolute inset-16 rounded-full border-[8px] border-[#F5F0EB]" />
+        opacity: 0,
+        scale: 0.9
+      }} animate={{
+        opacity: 1,
+        scale: 1
+      }} transition={{
+        duration: 0.8,
+        delay: 0.2
+      }}>
+        <div className="relative">
+          {/* Crystal prism image */}
+          <img 
+            src={crystalPrism} 
+            alt="Crystal prism with rays" 
+            className="w-72 h-auto"
+          />
           
-          {/* Orbiting circle - Outer orbit - border 12px, radius 122px */}
-          <motion.div className="absolute" style={{
-          top: '50%',
-          left: '50%'
-        }} animate={{
-          rotate: 360
-        }} transition={{
-          duration: 16,
-          repeat: Infinity,
-          ease: "linear"
-        }}>
-            <div className="w-3 h-3 rounded-full bg-gray-500 absolute" style={{
-            transform: 'translateX(122px) translateX(-6px) translateY(-6px)'
-          }} />
-          </motion.div>
-          
-          {/* Orbiting circle - Middle orbit - border 10px, radius 91px */}
-          <motion.div className="absolute" style={{
-          top: '50%',
-          left: '50%'
-        }} animate={{
-          rotate: -360
-        }} transition={{
-          duration: 12,
-          repeat: Infinity,
-          ease: "linear"
-        }}>
-            <div className="w-2.5 h-2.5 rounded-full bg-gray-500 absolute" style={{
-            transform: 'translateX(91px) translateX(-5px) translateY(-5px)'
-          }} />
-          </motion.div>
-          
-          {/* Orbiting circle - Inner orbit - border 8px, radius 60px */}
-          <motion.div className="absolute" style={{
-          top: '50%',
-          left: '50%'
-        }} animate={{
-          rotate: 360
-        }} transition={{
-          duration: 9.6,
-          repeat: Infinity,
-          ease: "linear"
-        }}>
-            <div className="w-2 h-2 rounded-full bg-gray-500 absolute" style={{
-            transform: 'translateX(60px) translateX(-4px) translateY(-4px)'
-          }} />
-          </motion.div>
-          
-          {/* Center dot */}
-          <div className="absolute inset-0 flex items-center justify-center">
-            <motion.div className="w-10 h-10 rounded-full bg-primary" animate={{
-            scale: [1, 1.2, 1]
-          }} transition={{
-            duration: 2,
-            repeat: Infinity
-          }} />
+          {/* Animated rays overlay on the right */}
+          <div className="absolute inset-0 overflow-hidden pointer-events-none">
+            {/* Ray 1 */}
+            <motion.div 
+              className="absolute right-0 top-1/2 w-32 h-[2px] bg-gradient-to-r from-transparent via-[#D4C9B8]/60 to-transparent origin-left"
+              style={{ transform: 'translateY(-12px) rotate(-8deg)', right: '5%' }}
+              animate={{ opacity: [0.3, 0.8, 0.3], scaleX: [0.9, 1.1, 0.9] }}
+              transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+            />
+            {/* Ray 2 */}
+            <motion.div 
+              className="absolute right-0 top-1/2 w-36 h-[3px] bg-gradient-to-r from-transparent via-[#C9BDA8]/50 to-transparent origin-left"
+              style={{ transform: 'translateY(-4px) rotate(-3deg)', right: '3%' }}
+              animate={{ opacity: [0.4, 0.9, 0.4], scaleX: [0.95, 1.15, 0.95] }}
+              transition={{ duration: 2.3, repeat: Infinity, ease: "easeInOut", delay: 0.3 }}
+            />
+            {/* Ray 3 */}
+            <motion.div 
+              className="absolute right-0 top-1/2 w-40 h-[2px] bg-gradient-to-r from-transparent via-[#E0D5C4]/70 to-transparent origin-left"
+              style={{ transform: 'translateY(4px) rotate(2deg)', right: '2%' }}
+              animate={{ opacity: [0.5, 1, 0.5], scaleX: [1, 1.2, 1] }}
+              transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut", delay: 0.6 }}
+            />
+            {/* Ray 4 */}
+            <motion.div 
+              className="absolute right-0 top-1/2 w-32 h-[2px] bg-gradient-to-r from-transparent via-[#D9CDBB]/55 to-transparent origin-left"
+              style={{ transform: 'translateY(12px) rotate(7deg)', right: '4%' }}
+              animate={{ opacity: [0.35, 0.85, 0.35], scaleX: [0.92, 1.12, 0.92] }}
+              transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut", delay: 0.9 }}
+            />
           </div>
-          
-          {/* Sparkle stars */}
-          <motion.div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-8" initial={{
-          opacity: 0,
-          y: 10
-        }} animate={{
-          opacity: 1,
-          y: 0
-        }} transition={{
-          delay: 0.5
-        }}>
-            
-          </motion.div>
         </div>
       </motion.div>
 
