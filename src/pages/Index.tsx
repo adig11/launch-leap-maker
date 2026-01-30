@@ -55,12 +55,12 @@ const Index = () => {
   // Handle business type selection - create userData directly
   const handleBusinessTypeSelect = (businessType: string, businessName: string) => {
     const data: UserData = {
-      name: "Founder",
+      name: "Adi",
       businessType: businessType,
-      cuisine: "Multi-Cuisine", // Default for non-food businesses
-      location: "India",
+      cuisine: "Multi-Cuisine",
+      location: "Mumbai, India",
       investment: "₹2-5 Lakhs",
-      kitchenName: businessName, // Use the business name directly
+      kitchenName: businessName,
     };
     handleOnboardingComplete(data);
   };
