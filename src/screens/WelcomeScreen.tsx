@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import crystalPrism from "@/assets/crystal-prism.png";
+import crystalPrism from "@/assets/crystal-prism-transparent.png";
 interface WelcomeScreenProps {
   onStart: () => void;
 }
@@ -22,22 +22,22 @@ const WelcomeScreen = ({
       </motion.div>
 
       {/* Central illustration with crystal prism */}
-      <motion.div className="flex-1 flex items-center justify-center px-6" initial={{
-        opacity: 0,
-        scale: 0.9
-      }} animate={{
-        opacity: 1,
-        scale: 1
-      }} transition={{
-        duration: 0.8,
-        delay: 0.2
-      }}>
-        <div className="relative">
+      <motion.div 
+        className="flex-1 flex items-center justify-center px-6" 
+        initial={{ opacity: 0, scale: 0.9 }} 
+        animate={{ opacity: 1, scale: 1 }} 
+        transition={{ duration: 0.8, delay: 0.2 }}
+      >
+        <motion.div 
+          className="relative"
+          animate={{ y: [0, -8, 0] }}
+          transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+        >
           {/* Crystal prism image */}
           <img 
             src={crystalPrism} 
             alt="Crystal prism with rays" 
-            className="w-72 h-auto mix-blend-multiply"
+            className="w-96 h-auto"
           />
           
           {/* Animated rays overlay on the right */}
@@ -71,7 +71,7 @@ const WelcomeScreen = ({
               transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut", delay: 0.9 }}
             />
           </div>
-        </div>
+        </motion.div>
       </motion.div>
 
       {/* Bottom content */}
