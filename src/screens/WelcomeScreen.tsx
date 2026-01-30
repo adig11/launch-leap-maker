@@ -1,6 +1,5 @@
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import crystalPrism from "@/assets/crystal-prism-transparent.png";
 interface WelcomeScreenProps {
   onStart: () => void;
 }
@@ -21,19 +20,96 @@ const WelcomeScreen = ({
         
       </motion.div>
 
-      {/* Central illustration with crystal prism */}
-      <motion.div 
-        className="flex-1 flex items-center justify-center px-6" 
-        initial={{ opacity: 0, scale: 0.9 }} 
-        animate={{ opacity: 1, scale: 1 }} 
-        transition={{ duration: 0.8, delay: 0.2 }}
-      >
-        {/* Crystal prism image - rays are part of the image */}
-        <img 
-          src={crystalPrism} 
-          alt="Crystal prism with rays" 
-          className="w-full max-w-md h-auto"
-        />
+      {/* Central illustration with concentric circles */}
+      <motion.div className="flex-1 flex items-center justify-center px-6" initial={{
+      opacity: 0,
+      scale: 0.9
+    }} animate={{
+      opacity: 1,
+      scale: 1
+    }} transition={{
+      duration: 0.8,
+      delay: 0.2
+    }}>
+        <div className="relative w-64 h-64">
+          {/* Outer circle */}
+          <div className="absolute inset-0 rounded-full border-[12px] border-[#EBE6E1]" />
+          {/* Middle circle */}
+          <div className="absolute inset-8 rounded-full border-[10px] border-[#F0EBE6]" />
+          {/* Inner circle */}
+          <div className="absolute inset-16 rounded-full border-[8px] border-[#F5F0EB]" />
+          
+          {/* Orbiting circle - Outer orbit - border 12px, radius 122px */}
+          <motion.div className="absolute" style={{
+          top: '50%',
+          left: '50%'
+        }} animate={{
+          rotate: 360
+        }} transition={{
+          duration: 16,
+          repeat: Infinity,
+          ease: "linear"
+        }}>
+            <div className="w-3 h-3 rounded-full bg-gray-500 absolute" style={{
+            transform: 'translateX(122px) translateX(-6px) translateY(-6px)'
+          }} />
+          </motion.div>
+          
+          {/* Orbiting circle - Middle orbit - border 10px, radius 91px */}
+          <motion.div className="absolute" style={{
+          top: '50%',
+          left: '50%'
+        }} animate={{
+          rotate: -360
+        }} transition={{
+          duration: 12,
+          repeat: Infinity,
+          ease: "linear"
+        }}>
+            <div className="w-2.5 h-2.5 rounded-full bg-gray-500 absolute" style={{
+            transform: 'translateX(91px) translateX(-5px) translateY(-5px)'
+          }} />
+          </motion.div>
+          
+          {/* Orbiting circle - Inner orbit - border 8px, radius 60px */}
+          <motion.div className="absolute" style={{
+          top: '50%',
+          left: '50%'
+        }} animate={{
+          rotate: 360
+        }} transition={{
+          duration: 9.6,
+          repeat: Infinity,
+          ease: "linear"
+        }}>
+            <div className="w-2 h-2 rounded-full bg-gray-500 absolute" style={{
+            transform: 'translateX(60px) translateX(-4px) translateY(-4px)'
+          }} />
+          </motion.div>
+          
+          {/* Center dot */}
+          <div className="absolute inset-0 flex items-center justify-center">
+            <motion.div className="w-10 h-10 rounded-full bg-primary" animate={{
+            scale: [1, 1.2, 1]
+          }} transition={{
+            duration: 2,
+            repeat: Infinity
+          }} />
+          </div>
+          
+          {/* Sparkle stars */}
+          <motion.div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-8" initial={{
+          opacity: 0,
+          y: 10
+        }} animate={{
+          opacity: 1,
+          y: 0
+        }} transition={{
+          delay: 0.5
+        }}>
+            
+          </motion.div>
+        </div>
       </motion.div>
 
       {/* Bottom content */}
