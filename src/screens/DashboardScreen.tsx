@@ -13,27 +13,27 @@ interface DashboardScreenProps {
 const businessThemes: Record<string, {
   bgColor: string;
   emoji: string;
-  accentColor: string;
+  textColor: string;
 }> = {
   "creator": {
-    bgColor: "bg-secondary",
+    bgColor: "bg-[#E8E4E0]",
     emoji: "🎬",
-    accentColor: "text-white",
+    textColor: "text-secondary",
   },
   "cloud-kitchen": {
-    bgColor: "bg-[#D4A394]",
+    bgColor: "bg-[#E8E4E0]",
     emoji: "🍳",
-    accentColor: "text-white",
+    textColor: "text-secondary",
   },
   "ecommerce": {
-    bgColor: "bg-[#6B9B8E]",
+    bgColor: "bg-[#E8E4E0]",
     emoji: "📦",
-    accentColor: "text-white",
+    textColor: "text-secondary",
   },
   "stock-trader": {
-    bgColor: "bg-secondary",
+    bgColor: "bg-[#E8E4E0]",
     emoji: "📈",
-    accentColor: "text-white",
+    textColor: "text-secondary",
   },
 };
 
@@ -215,7 +215,7 @@ const DashboardScreen = ({ activeTab, onTabChange, userData }: DashboardScreenPr
           {/* Current Business Path Card */}
           <motion.div
             variants={cardVariants}
-            className={`rounded-2xl ${currentTheme.bgColor} p-5 text-white`}
+            className={`rounded-2xl ${currentTheme.bgColor} p-5 ${currentTheme.textColor}`}
           >
             <div className="flex items-center gap-3 mb-3">
               <span className="text-3xl">{currentTheme.emoji}</span>
@@ -224,7 +224,7 @@ const DashboardScreen = ({ activeTab, onTabChange, userData }: DashboardScreenPr
                 <p className="text-sm text-white/80">Your personalized path</p>
               </div>
             </div>
-            <div className="flex items-center gap-2 text-sm text-white/70">
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <svg viewBox="0 0 24 24" className="w-4 h-4">
                 <path d="M21 10C21 17 12 23 12 23C12 23 3 17 3 10C3 5.02944 7.02944 1 12 1C16.9706 1 21 5.02944 21 10Z" stroke="currentColor" strokeWidth="2"/>
                 <circle cx="12" cy="10" r="3" stroke="currentColor" strokeWidth="2"/>
