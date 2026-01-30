@@ -138,7 +138,7 @@ const DashboardScreen = ({
           <motion.div variants={cardVariants} className="rounded-2xl bg-[hsl(25,30%,88%)] p-5 mb-4">
             <h3 className="font-semibold text-secondary text-lg mb-2">Community Access </h3>
             <p className="text-sm text-secondary/70 mb-4">Connect with 500+ entrepreneurs who've
-scaled in your category<br />scaled to Series A.
+scaled in your category<br />​
             </p>
             <button className="px-4 py-2 rounded-lg bg-secondary text-white text-sm font-medium">
               Explore Community
