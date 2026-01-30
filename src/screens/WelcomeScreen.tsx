@@ -78,7 +78,7 @@ const WelcomeScreen = ({
           {/* Center dot */}
           <div className="absolute inset-0 flex items-center justify-center">
             <motion.div 
-              className="w-10 h-10 rounded-full border-secondary border-dotted border bg-gray-500" 
+              className="w-10 h-10 rounded-full bg-gray-500" 
               animate={{ scale: [1, 1.2, 1] }} 
               transition={{ duration: 2, repeat: Infinity }} 
             />
