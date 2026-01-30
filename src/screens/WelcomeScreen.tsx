@@ -28,50 +28,12 @@ const WelcomeScreen = ({
         animate={{ opacity: 1, scale: 1 }} 
         transition={{ duration: 0.8, delay: 0.2 }}
       >
-        <motion.div 
-          className="relative"
-          animate={{ y: [0, -8, 0] }}
-          transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-        >
-          {/* Crystal prism image */}
-          <img 
-            src={crystalPrism} 
-            alt="Crystal prism with rays" 
-            className="w-96 h-auto"
-          />
-          
-          {/* Animated rays overlay on the right */}
-          <div className="absolute inset-0 overflow-hidden pointer-events-none">
-            {/* Ray 1 */}
-            <motion.div 
-              className="absolute right-0 top-1/2 w-32 h-[2px] bg-gradient-to-r from-transparent via-[#D4C9B8]/60 to-transparent origin-left"
-              style={{ transform: 'translateY(-12px) rotate(-8deg)', right: '5%' }}
-              animate={{ opacity: [0.3, 0.8, 0.3], scaleX: [0.9, 1.1, 0.9] }}
-              transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-            />
-            {/* Ray 2 */}
-            <motion.div 
-              className="absolute right-0 top-1/2 w-36 h-[3px] bg-gradient-to-r from-transparent via-[#C9BDA8]/50 to-transparent origin-left"
-              style={{ transform: 'translateY(-4px) rotate(-3deg)', right: '3%' }}
-              animate={{ opacity: [0.4, 0.9, 0.4], scaleX: [0.95, 1.15, 0.95] }}
-              transition={{ duration: 2.3, repeat: Infinity, ease: "easeInOut", delay: 0.3 }}
-            />
-            {/* Ray 3 */}
-            <motion.div 
-              className="absolute right-0 top-1/2 w-40 h-[2px] bg-gradient-to-r from-transparent via-[#E0D5C4]/70 to-transparent origin-left"
-              style={{ transform: 'translateY(4px) rotate(2deg)', right: '2%' }}
-              animate={{ opacity: [0.5, 1, 0.5], scaleX: [1, 1.2, 1] }}
-              transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut", delay: 0.6 }}
-            />
-            {/* Ray 4 */}
-            <motion.div 
-              className="absolute right-0 top-1/2 w-32 h-[2px] bg-gradient-to-r from-transparent via-[#D9CDBB]/55 to-transparent origin-left"
-              style={{ transform: 'translateY(12px) rotate(7deg)', right: '4%' }}
-              animate={{ opacity: [0.35, 0.85, 0.35], scaleX: [0.92, 1.12, 0.92] }}
-              transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut", delay: 0.9 }}
-            />
-          </div>
-        </motion.div>
+        {/* Crystal prism image - rays are part of the image */}
+        <img 
+          src={crystalPrism} 
+          alt="Crystal prism with rays" 
+          className="w-full max-w-md h-auto"
+        />
       </motion.div>
 
       {/* Bottom content */}
