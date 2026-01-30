@@ -16,12 +16,59 @@ interface JourneyScreenProps {
   userData: UserData;
 }
 
-// Journey phases for cloud kitchen (can be customized per business type)
-const journeyPhases = [
+// Journey phases configuration per business type
+const journeyPhasesConfig: Record<string, { phases: typeof defaultPhases; activeStep: string; nextMilestone: string }> = {
+  "creator": {
+    phases: [
+      { id: 1, title: "Niche & Positioning", status: "completed", completedDate: "Completed on Oct 12" },
+      { id: 2, title: "Content Strategy", status: "completed", completedDate: "Completed on Oct 28" },
+      { id: 3, title: "Platform Setup", status: "current", completedDate: "Current Phase • 2/5 Tasks" },
+      { id: 4, title: "Monetization", status: "locked", completedDate: "Upcoming Step" },
+      { id: 5, title: "Scale & Grow", status: "locked", completedDate: "Final Milestone" },
+    ],
+    activeStep: "Platform Setup & Branding",
+    nextMilestone: "Monetization",
+  },
+  "cloud-kitchen": {
+    phases: [
+      { id: 1, title: "Concept & Research", status: "completed", completedDate: "Completed on Oct 12" },
+      { id: 2, title: "Legal & Licensing", status: "completed", completedDate: "Completed on Oct 28" },
+      { id: 3, title: "Kitchen Setup", status: "current", completedDate: "Current Phase • 2/5 Tasks" },
+      { id: 4, title: "Menu Validation", status: "locked", completedDate: "Upcoming Step" },
+      { id: 5, title: "Go-to-Market", status: "locked", completedDate: "Final Milestone" },
+    ],
+    activeStep: "Kitchen Setup & Branding",
+    nextMilestone: "Menu Validation",
+  },
+  "ecommerce": {
+    phases: [
+      { id: 1, title: "Product Research", status: "completed", completedDate: "Completed on Oct 12" },
+      { id: 2, title: "Supplier & Inventory", status: "completed", completedDate: "Completed on Oct 28" },
+      { id: 3, title: "Store Setup", status: "current", completedDate: "Current Phase • 2/5 Tasks" },
+      { id: 4, title: "Marketing Launch", status: "locked", completedDate: "Upcoming Step" },
+      { id: 5, title: "Scale Operations", status: "locked", completedDate: "Final Milestone" },
+    ],
+    activeStep: "Store Setup & Branding",
+    nextMilestone: "Marketing Launch",
+  },
+  "stock-trader": {
+    phases: [
+      { id: 1, title: "Market Fundamentals", status: "completed", completedDate: "Completed on Oct 12" },
+      { id: 2, title: "Strategy Development", status: "completed", completedDate: "Completed on Oct 28" },
+      { id: 3, title: "Portfolio Setup", status: "current", completedDate: "Current Phase • 2/5 Tasks" },
+      { id: 4, title: "Risk Management", status: "locked", completedDate: "Upcoming Step" },
+      { id: 5, title: "Advanced Trading", status: "locked", completedDate: "Final Milestone" },
+    ],
+    activeStep: "Portfolio Setup & Analysis",
+    nextMilestone: "Risk Management",
+  },
+};
+
+const defaultPhases = [
   { id: 1, title: "Concept & Research", status: "completed", completedDate: "Completed on Oct 12" },
   { id: 2, title: "Legal & Licensing", status: "completed", completedDate: "Completed on Oct 28" },
-  { id: 3, title: "Kitchen Setup", status: "current", completedDate: "Current Phase • 2/5 Tasks" },
-  { id: 4, title: "Menu Validation", status: "locked", completedDate: "Upcoming Step" },
+  { id: 3, title: "Setup & Branding", status: "current", completedDate: "Current Phase • 2/5 Tasks" },
+  { id: 4, title: "Validation", status: "locked", completedDate: "Upcoming Step" },
   { id: 5, title: "Go-to-Market", status: "locked", completedDate: "Final Milestone" },
 ];
 
@@ -41,6 +88,14 @@ const JourneyScreen = ({ activeTab, onTabChange, userData }: JourneyScreenProps)
 
   const businessLabel = businessLabels[userData.businessType] || "Cloud Kitchen";
   const kitchenName = userData.kitchenName || businessLabel;
+  
+  // Get journey config based on business type
+  const journeyConfig = journeyPhasesConfig[userData.businessType] || {
+    phases: defaultPhases,
+    activeStep: "Setup & Branding",
+    nextMilestone: "Validation",
+  };
+  const journeyPhases = journeyConfig.phases;
 
   // Mock data for journey
   const mockData = {
@@ -134,9 +189,9 @@ const JourneyScreen = ({ activeTab, onTabChange, userData }: JourneyScreenProps)
           transition={{ delay: 0.2 }}
         >
           <p className="text-xs font-medium text-primary tracking-wide uppercase mb-2">Active Step</p>
-          <h2 className="text-xl font-bold text-secondary mb-2">Kitchen Setup & Branding</h2>
+          <h2 className="text-xl font-bold text-secondary mb-2">{journeyConfig.activeStep}</h2>
           <p className="text-sm text-muted-foreground mb-4">
-            Complete {mockData.tasksRemaining} more tasks to unlock Menu Validation.
+            Complete {mockData.tasksRemaining} more tasks to unlock {journeyConfig.nextMilestone}.
           </p>
           <Button 
             className="w-full py-5 text-base font-semibold rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground"
