@@ -79,7 +79,7 @@ const DashboardScreen = ({
               </div>
               <div>
                 <p className="text-xs font-medium text-muted-foreground tracking-wide">{getGreeting()}</p>
-                <h1 className="text-lg font-bold text-secondary">{firstName}</h1>
+                <h1 className="text-lg font-bold text-secondary">Adi</h1>
               </div>
             </div>
             
