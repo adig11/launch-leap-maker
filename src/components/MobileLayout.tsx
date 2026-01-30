@@ -83,7 +83,7 @@ const MobileLayout = ({
   ];
 
   return (
-    <div className="min-h-screen bg-[#F8F6F3] flex flex-col max-w-md mx-auto relative">
+    <div className="min-h-screen bg-[#F8F6F3] subtle-grid flex flex-col max-w-md mx-auto relative">
       <div className="flex-1 overflow-auto pb-24">{children}</div>
       {showNav && (
         <nav className="fixed bottom-4 left-4 right-4 max-w-md mx-auto">
