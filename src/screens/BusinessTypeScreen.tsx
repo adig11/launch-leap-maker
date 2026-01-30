@@ -40,18 +40,7 @@ const businessTypes = [
 
 const BusinessTypeScreen = ({ onSelect, onBack }: BusinessTypeScreenProps) => {
   return (
-    <div className="min-h-screen bg-[#F8F6F3] flex flex-col relative overflow-hidden">
-      {/* Grid pattern overlay */}
-      <div 
-        className="absolute inset-0 opacity-20"
-        style={{
-          backgroundImage: `
-            linear-gradient(rgba(0,0,0,0.03) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(0,0,0,0.03) 1px, transparent 1px)
-          `,
-          backgroundSize: '24px 24px'
-        }}
-      />
+    <div className="min-h-screen bg-[#F8F6F3] subtle-grid flex flex-col relative overflow-hidden">
 
       {/* Header */}
       <motion.div 

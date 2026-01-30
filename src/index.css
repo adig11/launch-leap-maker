@@ -101,4 +101,11 @@
   .gradient-orange-glow {
     background: linear-gradient(180deg, hsl(var(--background)) 0%, hsl(25 100% 95%) 100%);
   }
+
+  .subtle-grid {
+    background-image: 
+      linear-gradient(to right, hsl(0 0% 0% / 0.03) 1px, transparent 1px),
+      linear-gradient(to bottom, hsl(0 0% 0% / 0.03) 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
 }
