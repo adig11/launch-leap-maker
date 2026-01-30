@@ -31,79 +31,83 @@ const WelcomeScreen = ({
       duration: 0.8,
       delay: 0.2
     }}>
-        <div className="relative w-64 h-64">
-          {/* Outer circle */}
-          <div className="absolute inset-0 rounded-full border-[12px] border-[#EBE6E1]" />
-          {/* Middle circle */}
-          <div className="absolute inset-8 rounded-full border-[10px] border-[#F0EBE6]" />
-          {/* Inner circle */}
-          <div className="absolute inset-16 rounded-full border-[8px] border-[#F5F0EB]" />
+        <div className="flex flex-col items-center">
+          {/* Moonshot title above orbits */}
+          <motion.span 
+            className="text-2xl font-bold text-secondary tracking-wide mb-6"
+            style={{ fontFamily: "'Poppins', sans-serif" }}
+            initial={{ opacity: 0, y: 5 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.6, duration: 0.5 }}
+          >
+            Moonshot
+          </motion.span>
           
-          {/* Orbiting circle - Outer orbit - border 12px, radius 122px */}
-          <motion.div className="absolute" style={{
-          top: '50%',
-          left: '50%'
-        }} animate={{
-          rotate: 360
-        }} transition={{
-          duration: 16,
-          repeat: Infinity,
-          ease: "linear"
-        }}>
-            <div className="w-3 h-3 rounded-full bg-gray-500 absolute" style={{
-            transform: 'translateX(122px) translateX(-6px) translateY(-6px)'
-          }} />
-          </motion.div>
-          
-          {/* Orbiting circle - Middle orbit - border 10px, radius 91px */}
-          <motion.div className="absolute" style={{
-          top: '50%',
-          left: '50%'
-        }} animate={{
-          rotate: -360
-        }} transition={{
-          duration: 12,
-          repeat: Infinity,
-          ease: "linear"
-        }}>
-            <div className="w-2.5 h-2.5 rounded-full bg-gray-500 absolute" style={{
-            transform: 'translateX(91px) translateX(-5px) translateY(-5px)'
-          }} />
-          </motion.div>
-          
-          {/* Orbiting circle - Inner orbit - border 8px, radius 60px */}
-          <motion.div className="absolute" style={{
-          top: '50%',
-          left: '50%'
-        }} animate={{
-          rotate: 360
-        }} transition={{
-          duration: 9.6,
-          repeat: Infinity,
-          ease: "linear"
-        }}>
-            <div className="w-2 h-2 rounded-full bg-gray-500 absolute" style={{
-            transform: 'translateX(60px) translateX(-4px) translateY(-4px)'
-          }} />
-          </motion.div>
-          
-          {/* Center dot */}
-          <div className="absolute inset-0 flex flex-col items-center justify-center">
-            <motion.span 
-              className="text-2xl font-bold text-secondary tracking-wide mb-2"
-              style={{ fontFamily: "'Poppins', sans-serif" }}
-              initial={{ opacity: 0, y: 5 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.6, duration: 0.5 }}
-            >
-              Moonshot
-            </motion.span>
-            <motion.div className="w-10 h-10 rounded-full bg-primary" animate={{
-            scale: [1, 1.2, 1]
+          <div className="relative w-64 h-64">
+            {/* Outer circle */}
+            <div className="absolute inset-0 rounded-full border-[12px] border-[#EBE6E1]" />
+            {/* Middle circle */}
+            <div className="absolute inset-8 rounded-full border-[10px] border-[#F0EBE6]" />
+            {/* Inner circle */}
+            <div className="absolute inset-16 rounded-full border-[8px] border-[#F5F0EB]" />
+            
+            {/* Orbiting circle - Outer orbit - border 12px, radius 122px */}
+            <motion.div className="absolute" style={{
+            top: '50%',
+            left: '50%'
+          }} animate={{
+            rotate: 360
           }} transition={{
-            duration: 2,
-            repeat: Infinity
-          }} />
+            duration: 16,
+            repeat: Infinity,
+            ease: "linear"
+          }}>
+              <div className="w-3 h-3 rounded-full bg-gray-500 absolute" style={{
+              transform: 'translateX(122px) translateX(-6px) translateY(-6px)'
+            }} />
+          </motion.div>
+            
+            {/* Orbiting circle - Middle orbit - border 10px, radius 91px */}
+            <motion.div className="absolute" style={{
+            top: '50%',
+            left: '50%'
+          }} animate={{
+            rotate: -360
+          }} transition={{
+            duration: 12,
+            repeat: Infinity,
+            ease: "linear"
+          }}>
+              <div className="w-2.5 h-2.5 rounded-full bg-gray-500 absolute" style={{
+              transform: 'translateX(91px) translateX(-5px) translateY(-5px)'
+            }} />
+          </motion.div>
+            
+            {/* Orbiting circle - Inner orbit - border 8px, radius 60px */}
+            <motion.div className="absolute" style={{
+            top: '50%',
+            left: '50%'
+          }} animate={{
+            rotate: 360
+          }} transition={{
+            duration: 9.6,
+            repeat: Infinity,
+            ease: "linear"
+          }}>
+              <div className="w-2 h-2 rounded-full bg-gray-500 absolute" style={{
+              transform: 'translateX(60px) translateX(-4px) translateY(-4px)'
+            }} />
+          </motion.div>
+            
+            {/* Center dot */}
+            <div className="absolute inset-0 flex items-center justify-center">
+              <motion.div className="w-10 h-10 rounded-full bg-primary" animate={{
+              scale: [1, 1.2, 1]
+            }} transition={{
+              duration: 2,
+              repeat: Infinity
+            }} />
+            </div>
           </div>
           
           {/* Sparkle stars */}
