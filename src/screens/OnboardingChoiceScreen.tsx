@@ -76,12 +76,14 @@ const OnboardingChoiceScreen = ({ onHaveIdea, onBrainstorm }: OnboardingChoiceSc
                   Refine your vision and<br />start building your product.
                 </p>
               </div>
-              {selected === "idea" && (
+              {selected === "idea" ? (
                 <div className="w-6 h-6 rounded-full bg-primary flex items-center justify-center">
                   <svg viewBox="0 0 24 24" fill="none" className="w-4 h-4 text-white">
                     <path d="M5 12L10 17L19 8" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
                   </svg>
                 </div>
+              ) : (
+                <ChevronRightIcon className="w-5 h-5 text-muted-foreground" />
               )}
             </motion.button>
 
