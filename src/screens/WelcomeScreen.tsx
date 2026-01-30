@@ -37,7 +37,7 @@ const WelcomeScreen = ({
           <img 
             src={crystalPrism} 
             alt="Crystal prism with rays" 
-            className="w-72 h-auto"
+            className="w-72 h-auto mix-blend-multiply"
           />
           
           {/* Animated rays overlay on the right */}
