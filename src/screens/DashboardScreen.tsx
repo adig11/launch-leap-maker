@@ -2,211 +2,168 @@ import { motion } from "framer-motion";
 import MobileLayout from "@/components/MobileLayout";
 import { ChevronRightIcon } from "@/components/icons";
 import { UserData } from "@/pages/Index";
+import { useProgress } from "@/hooks/useProgress";
+import { Bell } from "lucide-react";
+import { Button } from "@/components/ui/button";
+
 interface DashboardScreenProps {
   activeTab: "home" | "journey" | "profile";
   onTabChange: (tab: "home" | "journey" | "profile") => void;
   userData: UserData;
 }
 
-// Business type themes - using solid warm colors that match the page
-const businessThemes: Record<string, {
-  bgColor: string;
-  emoji: string;
-  textColor: string;
-}> = {
-  "creator": {
-    bgColor: "bg-[#E8E4E0]",
-    emoji: "🎬",
-    textColor: "text-secondary"
-  },
-  "cloud-kitchen": {
-    bgColor: "bg-[#E8E4E0]",
-    emoji: "🍳",
-    textColor: "text-secondary"
-  },
-  "ecommerce": {
-    bgColor: "bg-[#E8E4E0]",
-    emoji: "📦",
-    textColor: "text-secondary"
-  },
-  "stock-trader": {
-    bgColor: "bg-[#E8E4E0]",
-    emoji: "📈",
-    textColor: "text-secondary"
-  }
-};
-const DashboardScreen = ({
-  activeTab,
-  onTabChange,
-  userData
-}: DashboardScreenProps) => {
-  const containerVariants = {
-    hidden: {
-      opacity: 0
-    },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.08
-      }
-    }
-  };
-  const cardVariants = {
-    hidden: {
-      opacity: 0,
-      y: 20
-    },
-    visible: {
-      opacity: 1,
-      y: 0
-    }
-  };
-  const currentTheme = businessThemes[userData.businessType] || businessThemes["cloud-kitchen"];
-  const businessName = userData.kitchenName || "Your Business";
+const DashboardScreen = ({ activeTab, onTabChange, userData }: DashboardScreenProps) => {
+  const { progress } = useProgress();
+  
   const firstName = userData.name?.split(" ")[0] || "Founder";
-  return <MobileLayout showNav activeTab={activeTab} onTabChange={onTabChange}>
-      <div className="min-h-screen bg-[#F8F6F3]">
+  const completedLessons = progress.completedLessons.length;
+  const totalLessons = 24;
+  const launchProgress = Math.round((completedLessons / totalLessons) * 100);
+
+  // Get time-based greeting
+  const getGreeting = () => {
+    const hour = new Date().getHours();
+    if (hour < 12) return "GOOD MORNING";
+    if (hour < 17) return "GOOD AFTERNOON";
+    return "GOOD EVENING";
+  };
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: { staggerChildren: 0.08 }
+    }
+  };
+
+  const cardVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0 }
+  };
+
+  return (
+    <MobileLayout showNav activeTab={activeTab} onTabChange={onTabChange}>
+      <div className="min-h-screen">
         {/* Header */}
-        <motion.div className="px-5 pt-6 pb-4" initial={{
-        opacity: 0,
-        y: -20
-      }} animate={{
-        opacity: 1,
-        y: 0
-      }} transition={{
-        duration: 0.5
-      }}>
+        <motion.div 
+          className="px-5 pt-6 pb-4"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
           <div className="flex items-center justify-between">
-            {/* Logo */}
+            {/* Left side - Logo and greeting */}
             <div className="flex items-center gap-3">
-              <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-[#E8B4A6] to-[#D4A394] flex items-center justify-center shadow-md">
+              <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-primary to-[#E8956D] flex items-center justify-center shadow-md">
                 <svg viewBox="0 0 24 24" fill="none" className="w-5 h-5 text-white">
-                  <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" fill="currentColor" />
+                  <path d="M12 2C12 2 19 7 19 14C19 17.5 16.5 20 12 20C7.5 20 5 17.5 5 14C5 7 12 2 12 2Z" fill="currentColor"/>
                 </svg>
               </div>
-              <span className="text-xl font-bold text-secondary">Moonshot</span>
+              <div>
+                <p className="text-xs font-medium text-muted-foreground tracking-wide">{getGreeting()}</p>
+                <h1 className="text-lg font-bold text-secondary">{firstName}</h1>
+              </div>
             </div>
             
-            {/* Profile avatar */}
-            <div className="w-10 h-10 rounded-full bg-muted border-2 border-border flex items-center justify-center">
-              <svg viewBox="0 0 24 24" fill="none" className="w-5 h-5 text-muted-foreground">
-                <path d="M20 21V19C20 16.7909 18.2091 15 16 15H8C5.79086 15 4 16.7909 4 19V21" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-                <circle cx="12" cy="7" r="4" stroke="currentColor" strokeWidth="2" />
-              </svg>
-            </div>
+            {/* Notification bell */}
+            <button className="w-10 h-10 rounded-full bg-white border border-border flex items-center justify-center shadow-sm">
+              <Bell className="w-5 h-5 text-secondary" />
+            </button>
           </div>
         </motion.div>
 
         {/* Main content */}
-        <motion.div className="px-5 pb-6" variants={containerVariants} initial="hidden" animate="visible">
-          {/* Hero Card */}
-          <motion.div variants={cardVariants} className="relative overflow-hidden rounded-3xl bg-[#F5EDE8] p-6 mb-4">
-            {/* Rocket illustration in background */}
-            <div className="absolute right-0 top-0 bottom-0 w-32 opacity-30">
-              <svg viewBox="0 0 100 150" className="w-full h-full" fill="none">
-                <path d="M50 10C50 10 75 35 75 70C75 85 65 95 50 95C35 95 25 85 25 70C25 35 50 10 50 10Z" fill="#D4A394" />
-                <path d="M25 70L10 90L25 85Z" fill="#C4917F" />
-                <path d="M75 70L90 90L75 85Z" fill="#C4917F" />
-              </svg>
+        <motion.div 
+          className="px-5 pb-6" 
+          variants={containerVariants} 
+          initial="hidden" 
+          animate="visible"
+        >
+          {/* Launch Progress Card */}
+          <motion.div 
+            variants={cardVariants} 
+            className="rounded-2xl bg-white border border-border p-5 mb-4 shadow-sm"
+          >
+            <div className="flex items-center justify-between mb-3">
+              <h2 className="font-semibold text-secondary">Launch Progress</h2>
+              <span className="text-lg font-bold text-primary">{launchProgress}%</span>
             </div>
-            
-            <div className="relative z-10">
-              <p className="text-xs font-medium text-primary tracking-wide uppercase mb-2">PRE-FOUNDER STAGE</p>
-              <h1 className="text-2xl font-bold text-secondary leading-tight mb-4">
-                Ready to launch,<br />{firstName}?
-              </h1>
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#E8DDD6]">
-                <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Live Mentoring</span>
-              </div>
+            <div className="h-2.5 bg-muted rounded-full overflow-hidden mb-3">
+              <motion.div
+                className="h-full bg-gradient-to-r from-primary to-[#E8956D] rounded-full"
+                initial={{ width: 0 }}
+                animate={{ width: `${launchProgress}%` }}
+                transition={{ duration: 0.8, ease: "easeOut" }}
+              />
             </div>
+            <p className="text-sm text-muted-foreground">
+              Next: Register your entity in GIFT City
+            </p>
           </motion.div>
 
-          {/* Bento Grid */}
+          {/* Two Column Cards */}
           <div className="grid grid-cols-2 gap-3 mb-4">
-            {/* Meet Moon Card */}
-            <motion.div variants={cardVariants} className="rounded-2xl bg-gradient-to-br from-[#D4A394] to-[#C4917F] p-5 aspect-square flex flex-col justify-end">
-              <div className="mb-auto">
-                <svg viewBox="0 0 48 48" className="w-12 h-12 text-white/80">
-                  <path d="M36 28C36 36.284 29.284 43 21 43C12.716 43 6 36.284 6 28C6 19.716 12.716 13 21 13C21.338 13 21.674 13.01 22.008 13.029C19.548 15.892 18 19.588 18 23.5C18 31.232 24.268 37.5 32 37.5C33.942 37.5 35.796 37.114 37.492 36.416C36.514 33.708 36 30.812 36 28Z" fill="currentColor" />
+            {/* Banking & Finance Card */}
+            <motion.div 
+              variants={cardVariants} 
+              className="rounded-2xl bg-white border border-border p-4 shadow-sm"
+            >
+              <div className="w-10 h-10 rounded-xl bg-[#FDF0E8] flex items-center justify-center mb-3">
+                <svg viewBox="0 0 24 24" fill="none" className="w-5 h-5 text-primary">
+                  <path d="M3 21H21M3 10H21M5 6L12 3L19 6M4 10V21M20 10V21M8 14V17M12 14V17M16 14V17" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
               </div>
-              <h3 className="font-semibold text-white text-base">Meet Moon</h3>
-              <p className="text-xs text-white/80 mt-0.5">Your AI Strategy Partner</p>
+              <h3 className="font-semibold text-secondary mb-1">Banking &<br />Finance</h3>
+              <p className="text-xs text-muted-foreground">3 tasks pending</p>
             </motion.div>
 
-            {/* Clarity Score Card */}
-            <motion.div variants={cardVariants} className="rounded-2xl bg-white border border-border p-4 flex flex-col">
-              <div className="flex items-start justify-between mb-2">
-                <span className="text-sm font-medium text-secondary">Clarity Score</span>
-                <svg viewBox="0 0 24 24" className="w-5 h-5 text-primary">
-                  <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" fill="none" stroke="currentColor" strokeWidth="2" />
+            {/* Legal Setup Card */}
+            <motion.div 
+              variants={cardVariants} 
+              className="rounded-2xl bg-white border border-border p-4 shadow-sm"
+            >
+              <div className="w-10 h-10 rounded-xl bg-[#F0E8FD] flex items-center justify-center mb-3">
+                <svg viewBox="0 0 24 24" fill="none" className="w-5 h-5 text-[#8B5CF6]">
+                  <path d="M14 2H6C5.46957 2 4.96086 2.21071 4.58579 2.58579C4.21071 2.96086 4 3.46957 4 4V20C4 20.5304 4.21071 21.0391 4.58579 21.4142C4.96086 21.7893 5.46957 22 6 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V8L14 2Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M14 2V8H20" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M12 18V12M9 15H15" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
                 </svg>
               </div>
-              
-              <div className="flex-1 flex items-center justify-center">
-                <div className="relative w-20 h-20">
-                  <svg className="w-full h-full -rotate-90">
-                    <circle cx="40" cy="40" r="34" strokeWidth="5" stroke="#E8E8E0" fill="none" />
-                    <circle cx="40" cy="40" r="34" strokeWidth="5" stroke="#D4A394" fill="none" strokeDasharray={`${12 / 100 * 213.6} 213.6`} strokeLinecap="round" />
-                  </svg>
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <span className="text-2xl font-bold text-secondary">12%</span>
-                  </div>
-                </div>
-              </div>
-              
-              <p className="text-xs text-muted-foreground text-center">3 milestones to next level</p>
+              <h3 className="font-semibold text-secondary mb-1">Legal Setup</h3>
+              <p className="text-xs text-muted-foreground">Step 2 of 5</p>
             </motion.div>
           </div>
 
-          {/* Begin Journey Card + Founders count */}
-          <div className="grid grid-cols-4 gap-3 mb-4">
-            {/* Begin Journey - takes 3 columns */}
-            <motion.button variants={cardVariants} onClick={() => onTabChange("journey")} className="col-span-3 rounded-2xl bg-secondary p-5 flex items-center justify-between text-left group hover:bg-secondary/90 transition-colors">
-              <div>
-                <h3 className="font-semibold text-white text-lg">Begin Journey</h3>
-                <p className="text-sm text-white/70 mt-0.5">Define your first thesis</p>
-              </div>
-              <div className="w-12 h-12 rounded-full bg-white flex items-center justify-center group-hover:scale-110 transition-transform">
-                <ChevronRightIcon className="w-6 h-6 text-secondary" />
-              </div>
-            </motion.button>
+          {/* Founder's Network Card */}
+          <motion.div 
+            variants={cardVariants} 
+            className="rounded-2xl bg-secondary p-5 mb-4"
+          >
+            <h3 className="font-semibold text-white text-lg mb-2">Founder's Network</h3>
+            <p className="text-sm text-white/70 mb-4">
+              Connect with 500+ Indian founders who've<br />scaled to Series A.
+            </p>
+            <button className="px-4 py-2 rounded-lg bg-white text-secondary text-sm font-medium">
+              Explore Community
+            </button>
+          </motion.div>
 
-            {/* Founders count - takes 1 column */}
-            <motion.div variants={cardVariants} className="rounded-2xl bg-[#E8F0EE] p-3 flex flex-col items-center justify-center">
-              <svg viewBox="0 0 24 24" className="w-6 h-6 text-[#6B9B8E] mb-1">
-                <path d="M17 21V19C17 16.7909 15.2091 15 13 15H5C2.79086 15 1 16.7909 1 19V21" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-                <circle cx="9" cy="7" r="4" stroke="currentColor" strokeWidth="2" />
-                <path d="M23 21V19C23 17.1362 21.7252 15.5701 20 15.126" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-                <path d="M16 3.12598C17.7252 3.56984 19 5.13618 19 7C19 8.86382 17.7252 10.4302 16 10.874" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+          {/* Start Daily Action Button */}
+          <motion.div variants={cardVariants}>
+            <Button 
+              onClick={() => onTabChange("journey")}
+              className="w-full py-6 text-base font-semibold rounded-2xl bg-primary hover:bg-primary/90 text-primary-foreground shadow-md"
+            >
+              Start Daily Action
+              <svg viewBox="0 0 24 24" fill="none" className="w-5 h-5 ml-2">
+                <path d="M13 2L3 14H12L11 22L21 10H12L13 2Z" fill="currentColor"/>
               </svg>
-              <span className="text-lg font-bold text-secondary">1.2k</span>
-              <span className="text-[10px] text-muted-foreground uppercase tracking-wide">Founders</span>
-            </motion.div>
-          </div>
-
-          {/* Current Business Path Card */}
-          <motion.div variants={cardVariants} className={`rounded-2xl ${currentTheme.bgColor} p-5 ${currentTheme.textColor}`}>
-            <div className="flex items-center gap-3 mb-3">
-              <span className="text-3xl">{currentTheme.emoji}</span>
-              <div>
-                <h3 className="font-semibold text-lg">{businessName}</h3>
-                <p className="text-sm text-secondary">Your personalized path</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <svg viewBox="0 0 24 24" className="w-4 h-4">
-                <path d="M21 10C21 17 12 23 12 23C12 23 3 17 3 10C3 5.02944 7.02944 1 12 1C16.9706 1 21 5.02944 21 10Z" stroke="currentColor" strokeWidth="2" />
-                <circle cx="12" cy="10" r="3" stroke="currentColor" strokeWidth="2" />
-              </svg>
-              <span>{userData.location}</span>
-              <span>•</span>
-              <span>{userData.investment}</span>
-            </div>
+            </Button>
           </motion.div>
         </motion.div>
       </div>
-    </MobileLayout>;
+    </MobileLayout>
+  );
 };
+
 export default DashboardScreen;
