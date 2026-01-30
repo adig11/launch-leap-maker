@@ -46,7 +46,7 @@ const WelcomeScreen = ({
         }} animate={{
           rotate: 360
         }} transition={{
-          duration: 20,
+          duration: 16,
           repeat: Infinity,
           ease: "linear"
         }}>
@@ -62,7 +62,7 @@ const WelcomeScreen = ({
         }} animate={{
           rotate: -360
         }} transition={{
-          duration: 15,
+          duration: 12,
           repeat: Infinity,
           ease: "linear"
         }}>
@@ -78,7 +78,7 @@ const WelcomeScreen = ({
         }} animate={{
           rotate: 360
         }} transition={{
-          duration: 12,
+          duration: 9.6,
           repeat: Infinity,
           ease: "linear"
         }}>
