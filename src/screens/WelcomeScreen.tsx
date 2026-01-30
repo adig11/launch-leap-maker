@@ -90,7 +90,7 @@ const WelcomeScreen = ({
 
         {/* Subtitle */}
         <p className="text-center text-muted-foreground text-base mb-8">
-          The India-first launchpad for the<br />next generation of visionary<br />founders.
+          Stop deraming. <br />​Start building. <br />​
         </p>
 
         {/* CTA Button */}
