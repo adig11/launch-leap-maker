@@ -39,38 +39,38 @@ const WelcomeScreen = ({
           {/* Inner circle */}
           <div className="absolute inset-16 rounded-full border-[8px] border-[#F5F0EB]" />
           
-          {/* Orbiting circle - Outer orbit (orange) */}
+          {/* Orbiting circle - Outer orbit (orange) - border 12px, radius 122px */}
           <motion.div
             className="absolute"
-            style={{ top: '50%', left: '50%' }}
+            style={{ top: '50%', left: '50%', marginLeft: -6, marginTop: -6 }}
             animate={{ rotate: 360 }}
             transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
           >
-            <div className="absolute" style={{ transform: 'translateX(120px)' }}>
-              <div className="w-4 h-4 rounded-full bg-orange-400" />
+            <div className="absolute" style={{ transform: 'translateX(122px)' }}>
+              <div className="w-3 h-3 rounded-full bg-orange-400" />
             </div>
           </motion.div>
           
-          {/* Orbiting circle - Middle orbit (teal) */}
+          {/* Orbiting circle - Middle orbit (teal) - border 10px, radius 91px */}
           <motion.div
             className="absolute"
-            style={{ top: '50%', left: '50%' }}
+            style={{ top: '50%', left: '50%', marginLeft: -5, marginTop: -5 }}
             animate={{ rotate: -360 }}
             transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
           >
-            <div className="absolute" style={{ transform: 'translateY(-88px)' }}>
-              <div className="w-3 h-3 rounded-full bg-teal-500" />
+            <div className="absolute" style={{ transform: 'translateY(-91px)' }}>
+              <div className="w-2.5 h-2.5 rounded-full bg-teal-500" />
             </div>
           </motion.div>
           
-          {/* Orbiting circle - Inner orbit (violet) */}
+          {/* Orbiting circle - Inner orbit (violet) - border 8px, radius 60px */}
           <motion.div
             className="absolute"
-            style={{ top: '50%', left: '50%' }}
+            style={{ top: '50%', left: '50%', marginLeft: -4, marginTop: -4 }}
             animate={{ rotate: 360 }}
             transition={{ duration: 12, repeat: Infinity, ease: "linear" }}
           >
-            <div className="absolute" style={{ transform: 'translateX(-56px)' }}>
+            <div className="absolute" style={{ transform: 'translateX(-60px)' }}>
               <div className="w-2 h-2 rounded-full bg-violet-500" />
             </div>
           </motion.div>
