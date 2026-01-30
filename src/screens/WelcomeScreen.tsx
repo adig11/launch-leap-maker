@@ -83,8 +83,8 @@ const WelcomeScreen = ({
     }}>
         {/* Title */}
         <div className="text-center mb-3">
-          <h1 className="text-3xl font-bold text-secondary leading-tight">
-            What do you want to<br />build today?
+          <h1 className="font-bold text-secondary leading-tight text-2xl">
+            What do you want to build today? <br />​
           </h1>
         </div>
 
