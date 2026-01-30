@@ -47,7 +47,7 @@ const WelcomeScreen = ({
             transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
           >
             <div className="absolute" style={{ transform: 'translateX(122px)' }}>
-              <div className="w-3 h-3 rounded-full bg-orange-400" />
+              <div className="w-3 h-3 rounded-full bg-gray-800" />
             </div>
           </motion.div>
           
@@ -59,7 +59,7 @@ const WelcomeScreen = ({
             transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
           >
             <div className="absolute" style={{ transform: 'translateY(-91px)' }}>
-              <div className="w-2.5 h-2.5 rounded-full bg-teal-500" />
+              <div className="w-2.5 h-2.5 rounded-full bg-gray-500" />
             </div>
           </motion.div>
           
@@ -71,7 +71,7 @@ const WelcomeScreen = ({
             transition={{ duration: 12, repeat: Infinity, ease: "linear" }}
           >
             <div className="absolute" style={{ transform: 'translateX(-60px)' }}>
-              <div className="w-2 h-2 rounded-full bg-violet-500" />
+              <div className="w-2 h-2 rounded-full bg-gray-300" />
             </div>
           </motion.div>
           
