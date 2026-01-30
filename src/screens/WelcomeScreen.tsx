@@ -39,14 +39,73 @@ const WelcomeScreen = ({
           {/* Inner circle */}
           <div className="absolute inset-16 rounded-full border-[8px] border-[#F5F0EB]" />
           
+          {/* Orbiting circles - Outer orbit */}
+          <motion.div
+            className="absolute w-4 h-4 rounded-full bg-primary/70"
+            style={{ top: '50%', left: '50%', marginTop: -8, marginLeft: -8 }}
+            animate={{ rotate: 360 }}
+            transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+          >
+            <div className="absolute" style={{ transform: 'translateX(120px)' }}>
+              <div className="w-4 h-4 rounded-full bg-primary/70" />
+            </div>
+          </motion.div>
+          
+          {/* Orbiting circles - Outer orbit (opposite) */}
+          <motion.div
+            className="absolute"
+            style={{ top: '50%', left: '50%' }}
+            animate={{ rotate: -360 }}
+            transition={{ duration: 12, repeat: Infinity, ease: "linear" }}
+          >
+            <div className="absolute" style={{ transform: 'translateX(-120px) translateY(-6px)' }}>
+              <div className="w-3 h-3 rounded-full bg-secondary/60" />
+            </div>
+          </motion.div>
+          
+          {/* Orbiting circles - Middle orbit */}
+          <motion.div
+            className="absolute"
+            style={{ top: '50%', left: '50%' }}
+            animate={{ rotate: 360 }}
+            transition={{ duration: 6, repeat: Infinity, ease: "linear" }}
+          >
+            <div className="absolute" style={{ transform: 'translateY(-88px) translateX(-5px)' }}>
+              <div className="w-2.5 h-2.5 rounded-full bg-primary" />
+            </div>
+          </motion.div>
+          
+          {/* Orbiting circles - Middle orbit (second) */}
+          <motion.div
+            className="absolute"
+            style={{ top: '50%', left: '50%' }}
+            animate={{ rotate: -360 }}
+            transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
+          >
+            <div className="absolute" style={{ transform: 'translateX(88px) translateY(-4px)' }}>
+              <div className="w-2 h-2 rounded-full bg-secondary/80" />
+            </div>
+          </motion.div>
+          
+          {/* Orbiting circles - Inner orbit */}
+          <motion.div
+            className="absolute"
+            style={{ top: '50%', left: '50%' }}
+            animate={{ rotate: 360 }}
+            transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+          >
+            <div className="absolute" style={{ transform: 'translateX(-56px) translateY(-3px)' }}>
+              <div className="w-1.5 h-1.5 rounded-full bg-primary/90" />
+            </div>
+          </motion.div>
+          
           {/* Center dot */}
           <div className="absolute inset-0 flex items-center justify-center">
-            <motion.div className="w-10 h-10 rounded-full border-secondary border-dotted border bg-gray-500" animate={{
-            scale: [1, 1.2, 1]
-          }} transition={{
-            duration: 2,
-            repeat: Infinity
-          }} />
+            <motion.div 
+              className="w-10 h-10 rounded-full border-secondary border-dotted border bg-gray-500" 
+              animate={{ scale: [1, 1.2, 1] }} 
+              transition={{ duration: 2, repeat: Infinity }} 
+            />
           </div>
           
           {/* Sparkle stars */}
