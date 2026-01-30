@@ -6,43 +6,35 @@ interface BusinessTypeScreenProps {
   onBack: () => void;
 }
 
-// Business type configurations with icons and themes
+// Business type configurations with solid warm colors matching the page
 const businessTypes = [
   {
     id: "creator",
     name: "Insta/YT Creator",
     description: "Build your personal brand & monetize content",
     emoji: "🎬",
-    gradient: "from-pink-500 via-purple-500 to-indigo-500",
-    bgColor: "bg-gradient-to-br from-pink-500/10 to-purple-500/10",
-    iconBg: "bg-gradient-to-br from-pink-500 to-purple-600",
+    iconBg: "bg-secondary",
   },
   {
     id: "cloud-kitchen",
     name: "Cloud Kitchen",
     description: "Launch a delivery-first food business",
     emoji: "🍳",
-    gradient: "from-orange-500 via-amber-500 to-yellow-500",
-    bgColor: "bg-gradient-to-br from-orange-500/10 to-amber-500/10",
-    iconBg: "bg-gradient-to-br from-orange-500 to-amber-600",
+    iconBg: "bg-[#D4A394]",
   },
   {
     id: "ecommerce",
     name: "Ecommerce/Dropshipping",
     description: "Sell products online without inventory",
     emoji: "📦",
-    gradient: "from-emerald-500 via-teal-500 to-cyan-500",
-    bgColor: "bg-gradient-to-br from-emerald-500/10 to-teal-500/10",
-    iconBg: "bg-gradient-to-br from-emerald-500 to-teal-600",
+    iconBg: "bg-[#6B9B8E]",
   },
   {
     id: "stock-trader",
     name: "Stock Trader",
     description: "Master markets & build trading income",
     emoji: "📈",
-    gradient: "from-blue-500 via-indigo-500 to-violet-500",
-    bgColor: "bg-gradient-to-br from-blue-500/10 to-indigo-500/10",
-    iconBg: "bg-gradient-to-br from-blue-500 to-indigo-600",
+    iconBg: "bg-secondary",
   },
 ];
 
