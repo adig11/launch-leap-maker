@@ -1,16 +1,15 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import ProfileScreen from "@/screens/ProfileScreen";
-import { UserData } from "@/pages/Index";
+import MoonChatScreen from "@/screens/MoonChatScreen";
 
-const ProfilePage = () => {
+const MoonPage = () => {
   const navigate = useNavigate();
-  const [userData, setUserData] = useState<UserData | null>(null);
+  const [hasData, setHasData] = useState(false);
 
   useEffect(() => {
     const stored = localStorage.getItem("moonshot_user_data");
     if (stored) {
-      setUserData(JSON.parse(stored));
+      setHasData(true);
     } else {
       navigate("/");
     }
@@ -23,21 +22,14 @@ const ProfilePage = () => {
     else if (tab === "profile") navigate("/profile");
   };
 
-  const handleResetOnboarding = () => {
-    localStorage.removeItem("moonshot_user_data");
-    navigate("/");
-  };
-
-  if (!userData) return null;
+  if (!hasData) return null;
 
   return (
-    <ProfileScreen
-      activeTab="profile"
+    <MoonChatScreen
+      activeTab="moon"
       onTabChange={handleTabChange}
-      userData={userData}
-      onResetOnboarding={handleResetOnboarding}
     />
   );
 };
 
-export default ProfilePage;
+export default MoonPage;

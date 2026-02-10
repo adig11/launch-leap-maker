@@ -16,9 +16,10 @@ const DashboardPage = () => {
     }
   }, [navigate]);
 
-  const handleTabChange = (tab: "home" | "journey" | "profile") => {
+  const handleTabChange = (tab: "home" | "journey" | "moon" | "profile") => {
     if (tab === "home") navigate("/dashboard");
     else if (tab === "journey") navigate("/journey");
+    else if (tab === "moon") navigate("/moon");
     else if (tab === "profile") navigate("/profile");
   };
 

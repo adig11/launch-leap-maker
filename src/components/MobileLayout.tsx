@@ -3,8 +3,8 @@ import { ReactNode } from "react";
 interface MobileLayoutProps {
   children: ReactNode;
   showNav?: boolean;
-  activeTab?: "home" | "journey" | "profile";
-  onTabChange?: (tab: "home" | "journey" | "profile") => void;
+  activeTab?: "home" | "journey" | "moon" | "profile";
+  onTabChange?: (tab: "home" | "journey" | "moon" | "profile") => void;
 }
 
 // Custom icons matching the reference design
@@ -36,6 +36,16 @@ const PathIcon = ({ className = "", filled = false }: { className?: string; fill
   </svg>
 );
 
+const MoonIcon = ({ className = "", filled = false }: { className?: string; filled?: boolean }) => (
+  <svg viewBox="0 0 24 24" fill="none" className={className}>
+    {filled ? (
+      <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="currentColor" />
+    ) : (
+      <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    )}
+  </svg>
+);
+
 const ProfileIcon = ({ className = "", filled = false }: { className?: string; filled?: boolean }) => (
   <svg viewBox="0 0 24 24" fill="none" className={className}>
     {filled ? (
@@ -61,6 +71,7 @@ const MobileLayout = ({
   const navItems = [
     { id: "home" as const, label: "Home", Icon: HomeIcon },
     { id: "journey" as const, label: "Path", Icon: PathIcon },
+    { id: "moon" as const, label: "Moon", Icon: MoonIcon },
     { id: "profile" as const, label: "Profile", Icon: ProfileIcon },
   ];
 
