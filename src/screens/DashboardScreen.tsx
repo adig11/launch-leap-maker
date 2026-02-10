@@ -6,8 +6,8 @@ import { useProgress } from "@/hooks/useProgress";
 import { Bell } from "lucide-react";
 import { Button } from "@/components/ui/button";
 interface DashboardScreenProps {
-  activeTab: "home" | "journey" | "profile";
-  onTabChange: (tab: "home" | "journey" | "profile") => void;
+  activeTab: "home" | "journey" | "moon" | "profile";
+  onTabChange: (tab: "home" | "journey" | "moon" | "profile") => void;
   userData: UserData;
 }
 const DashboardScreen = ({

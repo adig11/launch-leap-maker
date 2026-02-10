@@ -69,7 +69,8 @@ serve(async (req) => {
   }
 
   try {
-    const { messages } = await req.json();
+    const { messages, systemOverride } = await req.json();
+    const systemPrompt = systemOverride || SYSTEM_PROMPT;
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     
     if (!LOVABLE_API_KEY) {
@@ -85,7 +86,7 @@ serve(async (req) => {
       body: JSON.stringify({
         model: "google/gemini-3-flash-preview",
         messages: [
-          { role: "system", content: SYSTEM_PROMPT },
+          { role: "system", content: systemPrompt },
           ...messages,
         ],
         temperature: 0.7,

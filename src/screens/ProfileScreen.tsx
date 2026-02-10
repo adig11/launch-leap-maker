@@ -6,8 +6,8 @@ import { Button } from "@/components/ui/button";
 import { ChevronRight, Settings, LogOut, Award, Clock, Target, Zap } from "lucide-react";
 
 interface ProfileScreenProps {
-  activeTab: "home" | "journey" | "profile";
-  onTabChange: (tab: "home" | "journey" | "profile") => void;
+  activeTab: "home" | "journey" | "moon" | "profile";
+  onTabChange: (tab: "home" | "journey" | "moon" | "profile") => void;
   userData: UserData;
   onResetOnboarding: () => void;
 }

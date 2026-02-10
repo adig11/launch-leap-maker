@@ -6,6 +6,7 @@ import BusinessTypeScreen from "@/screens/BusinessTypeScreen";
 import MoonChatOnboarding from "@/screens/MoonChatOnboarding";
 import DashboardScreen from "@/screens/DashboardScreen";
 import JourneyScreen from "@/screens/JourneyScreen";
+import MoonChatScreen from "@/screens/MoonChatScreen";
 import ProfileScreen from "@/screens/ProfileScreen";
 
 export interface UserData {
@@ -22,7 +23,7 @@ type OnboardingStep = "welcome" | "choice" | "business-type" | "moon-chat";
 const Index = () => {
   const navigate = useNavigate();
   const [userData, setUserData] = useState<UserData | null>(null);
-  const [activeTab, setActiveTab] = useState<"home" | "journey" | "profile">("home");
+  const [activeTab, setActiveTab] = useState<"home" | "journey" | "moon" | "profile">("home");
   const [onboardingStep, setOnboardingStep] = useState<OnboardingStep>("welcome");
 
   // Check for existing user data on mount
@@ -46,9 +47,10 @@ const Index = () => {
     setOnboardingStep("welcome");
   };
 
-  const handleTabChange = (tab: "home" | "journey" | "profile") => {
+  const handleTabChange = (tab: "home" | "journey" | "moon" | "profile") => {
     if (tab === "home") navigate("/dashboard");
     else if (tab === "journey") navigate("/journey");
+    else if (tab === "moon") navigate("/moon");
     else if (tab === "profile") navigate("/profile");
   };
 
@@ -101,6 +103,10 @@ const Index = () => {
   // After onboarding, redirect to dashboard
   if (activeTab === "journey") {
     return <JourneyScreen activeTab={activeTab} onTabChange={handleTabChange} userData={userData!} />;
+  }
+
+  if (activeTab === "moon") {
+    return <MoonChatScreen activeTab={activeTab} onTabChange={handleTabChange} />;
   }
 
   if (activeTab === "profile") {

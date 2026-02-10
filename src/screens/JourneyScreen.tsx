@@ -12,8 +12,8 @@ import { Button } from "@/components/ui/button";
 import { MoreHorizontal, ChevronLeft, Lock, CheckCircle2, Play } from "lucide-react";
 
 interface JourneyScreenProps {
-  activeTab: "home" | "journey" | "profile";
-  onTabChange: (tab: "home" | "journey" | "profile") => void;
+  activeTab: "home" | "journey" | "moon" | "profile";
+  onTabChange: (tab: "home" | "journey" | "moon" | "profile") => void;
   userData: UserData;
 }
 
