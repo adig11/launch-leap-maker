@@ -83,7 +83,6 @@ const Index = () => {
             localStorage.setItem("moonshot_phone", phone);
             setOnboardingStep("choice");
           }}
-          onSkip={() => setOnboardingStep("choice")}
         />
       );
     }
