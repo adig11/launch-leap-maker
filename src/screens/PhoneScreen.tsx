@@ -2,29 +2,47 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 interface PhoneScreenProps {
   onContinue: (phone: string) => void;
-  onSkip: () => void;
 }
 
-const PhoneScreen = ({ onContinue, onSkip }: PhoneScreenProps) => {
+const PhoneScreen = ({ onContinue }: PhoneScreenProps) => {
   const [phone, setPhone] = useState("");
   const [error, setError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const validatePhone = (value: string) => {
     const digits = value.replace(/\D/g, "");
     return digits.length === 10;
   };
 
-  const handleContinue = () => {
+  const handleContinue = async () => {
     const digits = phone.replace(/\D/g, "");
     if (!validatePhone(phone)) {
       setError("Enter a valid 10-digit mobile number");
       return;
     }
     setError("");
-    onContinue(digits);
+    setIsSubmitting(true);
+
+    try {
+      const { error: dbError } = await supabase
+        .from("user_phones")
+        .insert({ phone: digits });
+
+      if (dbError) throw dbError;
+
+      localStorage.setItem("moonshot_phone", digits);
+      onContinue(digits);
+    } catch (err) {
+      console.error("Error saving phone:", err);
+      toast.error("Failed to save phone number. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -110,33 +128,29 @@ const PhoneScreen = ({ onContinue, onSkip }: PhoneScreenProps) => {
 
       {/* Bottom CTA */}
       <motion.div
-        className="px-6 pb-10 pt-4 space-y-3"
+        className="px-6 pb-10 pt-4"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.3 }}
       >
         <Button
           onClick={handleContinue}
-          disabled={phone.length < 10}
+          disabled={phone.length < 10 || isSubmitting}
           className="w-full bg-primary hover:bg-primary/90 text-primary-foreground py-6 text-base font-semibold rounded-2xl shadow-md disabled:opacity-40"
         >
-          Continue
-          <svg viewBox="0 0 24 24" fill="none" className="w-5 h-5 ml-2">
-            <path
-              d="M5 12h14M12 5l7 7-7 7"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
+          {isSubmitting ? "Saving..." : "Continue"}
+          {!isSubmitting && (
+            <svg viewBox="0 0 24 24" fill="none" className="w-5 h-5 ml-2">
+              <path
+                d="M5 12h14M12 5l7 7-7 7"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          )}
         </Button>
-        <button
-          onClick={onSkip}
-          className="w-full text-center text-sm text-muted-foreground py-2 hover:text-secondary transition-colors"
-        >
-          Skip for now
-        </button>
       </motion.div>
     </div>
   );
