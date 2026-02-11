@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import WelcomeScreen from "@/screens/WelcomeScreen";
+import PhoneScreen from "@/screens/PhoneScreen";
 import OnboardingChoiceScreen from "@/screens/OnboardingChoiceScreen";
 import BusinessTypeScreen from "@/screens/BusinessTypeScreen";
 import MoonChatOnboarding from "@/screens/MoonChatOnboarding";
@@ -18,7 +19,7 @@ export interface UserData {
   kitchenName: string;
 }
 
-type OnboardingStep = "welcome" | "choice" | "business-type" | "moon-chat";
+type OnboardingStep = "welcome" | "phone" | "choice" | "business-type" | "moon-chat";
 
 const Index = () => {
   const navigate = useNavigate();
@@ -71,7 +72,20 @@ const Index = () => {
   if (!userData) {
     // Welcome screen
     if (onboardingStep === "welcome") {
-      return <WelcomeScreen onStart={() => setOnboardingStep("choice")} />;
+      return <WelcomeScreen onStart={() => setOnboardingStep("phone")} />;
+    }
+
+    // Phone number screen
+    if (onboardingStep === "phone") {
+      return (
+        <PhoneScreen
+          onContinue={(phone) => {
+            localStorage.setItem("moonshot_phone", phone);
+            setOnboardingStep("choice");
+          }}
+          onSkip={() => setOnboardingStep("choice")}
+        />
+      );
     }
 
     // Choice screen (I have idea vs brainstorm)
